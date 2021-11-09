@@ -8,14 +8,15 @@ class LM20(Spider):
     def start_requests(self):
         return [ FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
                              formdata={'clearCache': 'F', 'page': '1'},
-                             cb_kwargs={'page': '1'},
+                             cb_kwargs={'page': 1},
                              callback=self.parse) ]
 
     def parse(self, response, page):
         """
         @url https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet
         @filers_form
-        @returns requests 500 500
+        @cb_kwargs {"page": 0}
+        @returns requests 501 501
         """
         
         filers = response.json()['filerList']
@@ -24,13 +25,13 @@ class LM20(Spider):
                               formdata={'srFilerId': filer['srFilerId']},
                               callback=self.parse_filings,
                               cb_kwargs={'filer': filer})
+
         if len(filers) == 500:
-            page = str(int(page) + 1)
+            page += 1
             yield FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
-                              formdata={'clearCache': 'F', 'page': page},
+                              formdata={'clearCache': 'F', 'page': str(page)},
                               cb_kwargs={'page': page},
-                              callback=self.parse)
-            
+                              callback=self.parse)            
             
 
     def parse_filings(self, response, filer):
