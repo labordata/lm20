@@ -2,16 +2,8 @@ from scrapy import Spider
 from scrapy.http import FormRequest
 
 
-class LM20(Spider):
-    name = "filings"
-
-    custom_settings = {
-        'ITEM_PIPELINES': {
-            'lm20.pipelines.TimestampToDatetime': 1,
-            'lm20.pipelines.ReportLink': 2,
-            'scrapy.pipelines.files.FilesPipeline': 3
-        }
-    }
+class LM20Filers(Spider):
+    name = "filers"
 
     def start_requests(self):
         return [ FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
@@ -24,28 +16,16 @@ class LM20(Spider):
         @url https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet
         @filers_form
         @cb_kwargs {"page": 0}
-        @returns requests 501 501
+        @returns items 500
+        @returns requests 1 1
         """
         
         filers = response.json()['filerList']
-        for filer in filers:
-            yield FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet",
-                              formdata={'srFilerId': filer['srFilerId']},
-                              callback=self.parse_filings)
+        yield from filers
+
         if len(filers) == 500:
             page += 1
             yield FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
                               formdata={'clearCache': 'F', 'page': str(page)},
                               cb_kwargs={'page': page},
                               callback=self.parse)
-
-    def parse_filings(self, response):
-        """
-        @url https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet
-        @filings_form
-        @returns items 55
-        @scrapes amended
-        """
-
-        yield from response.json()['detail']
-

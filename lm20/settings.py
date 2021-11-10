@@ -64,12 +64,6 @@ ROBOTSTXT_OBEY = True
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
-ITEM_PIPELINES = {
-    'lm20.pipelines.TimestampToDatetime': 1,
-    'lm20.pipelines.ReportLink': 2,
-    'scrapy.pipelines.files.FilesPipeline': 3
-}
-
 FILES_STORE = './reports'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

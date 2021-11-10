@@ -1,1 +1,3 @@
 scrapy
+csvs-to-sqlite
+sqlite-utils
