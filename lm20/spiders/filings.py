@@ -25,14 +25,12 @@ class LM20(Spider):
                               formdata={'srFilerId': filer['srFilerId']},
                               callback=self.parse_filings,
                               cb_kwargs={'filer': filer})
-
         if len(filers) == 500:
             page += 1
             yield FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
                               formdata={'clearCache': 'F', 'page': str(page)},
                               cb_kwargs={'page': page},
-                              callback=self.parse)            
-            
+                              callback=self.parse)
 
     def parse_filings(self, response, filer):
         """

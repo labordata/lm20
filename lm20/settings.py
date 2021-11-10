@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = 'lm20.spiders'
 
 SPIDER_CONTRACTS = {
     'lm20.contracts.FilersFormContract': 10,
-    'lm20.contracts.FilingsFormContract': 10,    
+    'lm20.contracts.FilingsFormContract': 11,
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -65,9 +65,12 @@ ROBOTSTXT_OBEY = True
 #}
 
 ITEM_PIPELINES = {
-    'lm20.pipelines.TimestampToDatetime': 300,
+    'lm20.pipelines.TimestampToDatetime': 1,
+    'lm20.pipelines.ReportLink': 2,
+    'scrapy.pipelines.files.FilesPipeline': 3
 }
 
+FILES_STORE = './reports'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
@@ -88,3 +91,5 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+FILE_EXPIRES = 0

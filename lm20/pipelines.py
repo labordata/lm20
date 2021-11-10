@@ -20,3 +20,24 @@ class TimestampToDatetime:
                     filing[field] = datetime.datetime.fromtimestamp(timestamp//1000)
 
         return item
+
+class ReportLink:
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+
+        filings = adapter['filings']
+        for filing in filings:
+            report_id = filing.get('rptId')
+            report_type = filing.get('formLink')
+
+            if report_id and report_type:
+                if 'file_urls' not in item:
+                    item['file_urls'] = []
+
+                report_url = f'https://olmsapps.dol.gov/query/orgReport.do?rptId={report_id}&rptForm={report_type}'
+
+                filing['report_url'] = report_url
+                item['file_urls'].append(report_url)
+
+        return item
+                                  
