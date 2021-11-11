@@ -2,13 +2,11 @@ from scrapy import Spider
 from scrapy.http import FormRequest
 
 
-class LM20(Spider):
-    name = "filings"
+class Attachments(Spider):
+    name = "attachments"
 
     custom_settings = {
         'ITEM_PIPELINES': {
-            'lm20.pipelines.TimestampToDatetime': 1,
-            'lm20.pipelines.ReportLink': 2,
             'scrapy.pipelines.files.FilesPipeline': 3
         }
     }
@@ -43,14 +41,25 @@ class LM20(Spider):
         """
         @url https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet
         @filings_form
-        @returns items 55
-        @scrapes amended
+        @returns items 1
         """
 
         for filing in response.json()['detail']:
-            del filing['attachmentId']
-            del filing['fileName']
-            del filing['fileDesc']
+            if not filing['attachmentId']:
+                continue
+            attachment_ids = (filing['attachmentId'] or '').split(',')
+            file_names = (filing['fileName'] or '').split(',')
+            file_descriptions = (filing['fileDesc'] or '').split(',')
 
-            yield filing
+            attachments = zip(attachment_ids, file_names, file_descriptions)
 
+            for attachment in attachments:
+                attachment_id, file_name, file_description = attachment
+                item = {
+                    'rptId': filing['rptId'],
+                    'attachment_id': attachment_id,
+                    'filename': file_name,
+                    'file_description': file_description,
+                    'file_urls': [ f'https://olmsapps.dol.gov/query/orgReport.do?rptId={attachment_id}&rptForm=LM20FormAttachment' ]
+                    }
+                yield item
