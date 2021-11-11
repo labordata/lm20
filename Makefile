@@ -7,9 +7,13 @@ lm20.db : filing.csv filer.csv
             --column-order companyName \
             --column-order companyCity \
             --column-order companyState
-	sqlite-utils transform $@ filing --pk=rptId --drop files
+	sqlite-utils transform $@ filing \
+            --pk=rptId \
+            --drop files \
+            --drop termDate \
+            --drop amount \
+            --drop empTrdName
 	sqlite-utils add-foreign-key $@ filing srNum filer srNum
-
 
 filing.csv :
 	scrapy crawl filings -O $@
