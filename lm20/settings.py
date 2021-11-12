@@ -15,6 +15,7 @@ NEWSPIDER_MODULE = 'lm20.spiders'
 SPIDER_CONTRACTS = {
     'lm20.contracts.FilersFormContract': 10,
     'lm20.contracts.FilingsFormContract': 11,
+    'lm20.contracts.EmployersFormContract': 12,
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

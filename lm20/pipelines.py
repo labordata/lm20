@@ -1,6 +1,9 @@
 import datetime
 
+import dateutil.parser
+
 from itemadapter import ItemAdapter
+from scrapy.exceptions import DropItem
 
 
 class TimestampToDatetime:
@@ -36,3 +39,70 @@ class ReportLink:
 
         return item
                                   
+class Nullify:
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+
+        fields = ('termDate', 'empTrdName', 'empLabOrg', 'state', 'city', 'amount')
+        null_synonyms = {'Not Available',
+                         'Ongoing',
+                         'Continuing',
+                         'Not requred to subm',
+                         'ongoing',
+                         '000000',
+                         '00/00/0000',
+                         'MULTIPLE',
+                         'na',
+                         'NOT REQUIRED TO COMPLETE',
+                         'NOT REQUIRED TO REPORT',
+                         'NOT REQUIRED TO COMPLETE/SPECIAL ENFORCEMENT POLIC',
+                         'NOT SHOWN',
+                         'NONE',
+                         'SEE ATTACHED LIST',
+                         'MULTIPLE NAMES',
+                         'MULTIPLE COMPANIES',
+                         'MULT',
+                         'NO CITY',
+                         'No City',
+                         '0',
+                         '00',
+                         '-1',
+                         'ZZ',
+                         }
+
+        nulls = 0
+        for field in fields:
+            value = adapter[field]
+            if value and (value in null_synonyms or not value.strip()):
+                adapter[field] = None
+
+            if not adapter[field]:
+                nulls += 1
+
+        if len(fields) == nulls:
+            raise DropItem
+
+        return item
+        
+
+class TitleCase:
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+
+        try:
+            adapter['city'] = adapter['city'].title()
+        except AttributeError:
+            pass
+
+        return item
+
+
+class StandardDate:
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+
+        time_str = adapter['termDate']
+        if time_str:
+            adapter['termDate'] = dateutil.parser.parse(time_str).date()
+
+        return item

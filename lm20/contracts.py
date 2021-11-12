@@ -18,3 +18,12 @@ class FilingsFormContract(Contract):
     def adjust_request_args(self, args):
         args['formdata'] = {'srFilerId': '100181,105304'}
         return args
+
+
+class EmployersFormContract(Contract):
+    name = 'employers_form'
+    request_cls = FormRequest
+    
+    def adjust_request_args(self, args):
+        args['formdata'] = {'rptId': '731598'}
+        return args
