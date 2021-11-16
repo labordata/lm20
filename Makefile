@@ -13,7 +13,8 @@ lm20.db : filer.csv filing.csv attachment.csv employer.csv
             --drop subLabOrg \
             --drop termDate \
             --drop amount \
-            --drop empTrdName
+            --drop empTrdName \
+            --drop formLink
 	sqlite-utils transform $@ attachment \
             --pk=attachment_id \
             --drop files

@@ -50,3 +50,8 @@ jobs:
           asset_name: lm20.db.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: application/zip # required by GitHub API
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: 'update'
+          add: 'reports/full/*'
