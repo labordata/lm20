@@ -575,7 +575,7 @@
 <div class="myTable">
 <div class="row">
 <div class="col-xs-8">
-<span class="i-label">1.a. File Number: C-</span><span class="i-value">69497</span>
+<span class="i-label">1.a. File Number: C-</span><span class="i-value">69493</span>
 </div>
 <div class="col-xs-8 noleft noright">
 <span class="i-label"></span>
@@ -600,25 +600,25 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Oliver J Bell</span>
+<span class="i-label">Name:</span><span class="i-value">Brittany J Lewis</span>
 </div>
 <div>
-<span class="i-label">Title:</span><span class="i-value">President</span>
+<span class="i-label">Title:</span><span class="i-value">Consultant</span>
 </div>
 <div>
-<span class="i-label">Organization:</span><span class="i-value">Labor Communications Services, LLC</span>
+<span class="i-label">Organization:</span><span class="i-value">Brittany Lewis</span>
 </div>
 <div>
-<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value">PO Box 79710</span>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">Street:</span><span class="i-value"></span>
+<span class="i-label">Street:</span><span class="i-value">30 N Emerson St, Unit 102</span>
 </div>
 <div>
-<span class="i-label">City:</span><span class="i-value">Houston</span><span class="i-label">State:</span><span class="i-value">TX</span>
+<span class="i-label">City:</span><span class="i-value">Denver</span><span class="i-label">State:</span><span class="i-value">CO</span>
 </div>
 <div>
-<span class="i-label">ZIP code:</span>77279</div>
+<span class="i-label">ZIP code:</span>80218</div>
 </div>
 </div>
 <div class="col-xs-12 cell-lg-210 notop noleft">
@@ -635,25 +635,26 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Oliver John Bell</span>
+<span class="i-label">Name:</span><span class="i-value"> </span>
 </div>
 <div>
-<span class="i-label">Title:</span><span class="i-value">President</span>
+<span class="i-label">Title:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">Organization:</span><span class="i-value">Labor Communications Services, LLC</span>
+<span class="i-label">Organization:</span><span class="i-value"></span>
 </div>
 <div>
 <span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">Street:</span><span class="i-value">21394 BIG BUCK DR</span>
+<span class="i-label">Street:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">City:</span><span class="i-value">CLEVELAND</span><span class="i-label">State:</span><span class="i-value">TX</span>
+<span class="i-label">City:</span><span class="i-value"></span><span class="i-label">State:</span>
 </div>
 <div>
-<span class="i-label">ZIP code:</span>77328</div>
+<span class="i-label">ZIP code:</span>
+</div>
 </div>
 </div>
 </div>
@@ -665,7 +666,7 @@
 <span class="i-label">4.</span>
 </div>
 <div class="col-xs-23">
-<span class="i-label">Date fiscal year ends:</span><span class="i-value"><span class="i-value">Dec /</span>31</span>
+<span class="i-label">Date fiscal year ends:</span><span class="i-value"><span class="i-value">Dec /</span>21</span>
 </div>
 </div>
 </div>
@@ -684,7 +685,7 @@
 <div class="i-sectionbody">
 
 										a.
-										<span class="i-nocheckbox"></span>
+										<span class="i-xcheckbox">X</span>
 										Individual &nbsp; &nbsp; &nbsp; b.
 										<span class="i-nocheckbox"></span>
 										Partnership
@@ -693,7 +694,7 @@
 <div class="i-sectionbody">
 
 										c.
-										<span class="i-xcheckbox">X</span>
+										<span class="i-nocheckbox"></span>
 										Corporation C d.
 										<span class="i-nocheckbox"></span>
 										Other
@@ -732,10 +733,10 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Neil Neufeld</span>
+<span class="i-label">Name:</span><span class="i-value">Robert Frank</span>
 </div>
 <div>
-<span class="i-label">Organization:</span><span class="i-value">Imperfect Foods, Inc</span>
+<span class="i-label">Organization:</span><span class="i-value">Maine Medical Center</span>
 </div>
 <div>
 <span class="i-label">Trade Name, if any:</span><span class="i-value"></span>
@@ -744,13 +745,13 @@
 <span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">Street:</span><span class="i-value">1616 Donner Ave</span>
+<span class="i-label">Street:</span><span class="i-value">110 Free St</span>
 </div>
 <div>
-<span class="i-label">City:</span><span class="i-value">San Francisco</span><span class="i-label">State:</span><span class="i-value">CA</span>
+<span class="i-label">City:</span><span class="i-value">Portland</span><span class="i-label">State:</span><span class="i-value">ME</span>
 </div>
 <div>
-<span class="i-label">ZIP code:</span>94124</div>
+<span class="i-label">ZIP code:</span>04101</div>
 </div>
 </div>
 <div class="col-xs-12 notop noleft cell-lg-210">
@@ -762,7 +763,7 @@
 </div>
 <div class="col-xs-23">
 <span class="i-label">
-														Date entered into</span><span class="i-value">03/05/2021</span>
+														Date entered into</span><span class="i-value">01/01/2021</span>
 </div>
 </div>
 </div>
@@ -781,7 +782,7 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Neil Neufeld</span>
+<span class="i-label">Name:</span><span class="i-value">Robert Frank</span>
 </div>
 <div></div>
 </div>
@@ -826,7 +827,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						SIGNED:
-					</span><span class="i-value">Oliver J Bell</span>
+					</span><span class="i-value">Brittany J Lewis</span>
 </div>
 </div>
 <div class="row">
@@ -842,7 +843,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						Date:
-					</span><span class="i-value">Apr 23, 2021</span>
+					</span><span class="i-value">Apr 21, 2021</span>
 </div>
 </div>
 <div class="row">
@@ -850,7 +851,7 @@
 <div class="col-xs-15">
 <span class="i-label">
 						Telephone Number:
-					</span><span class="i-value">281-593-1690</span>
+					</span><span class="i-value">810-706-0644</span>
 </div>
 </div>
 </div>
@@ -864,7 +865,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						SIGNED:
-					</span><span class="i-value">Oliver J Bell</span>
+					</span><span class="i-value"></span>
 </div>
 </div>
 <div class="row">
@@ -880,7 +881,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						Date:
-					</span><span class="i-value">Apr 23, 2021</span>
+					</span><span class="i-value"></span>
 </div>
 </div>
 <div class="row">
@@ -888,7 +889,7 @@
 <div class="col-xs-15">
 <span class="i-label">
 						Telephone Number:
-					</span><span class="i-value">281-593-1690</span>
+					</span><span class="i-value"></span>
 </div>
 </div>
 </div>
@@ -967,7 +968,7 @@
 <span><span class="i-nocheckbox"></span></span><span class="i-value">Written Agreement/Arrangement</span>
 </div>
 <div class="row">
-<div class="col-xs-22">No written agreement</div>
+<div class="col-xs-22">To persuade employees to exercise or not exercise the right to organize through a labor union.</div>
 </div>
 </div>
 </div>
@@ -1000,7 +1001,7 @@
 </div>
 <div class="row">
 <div class="col-xs-24 notop">
-<span class="i-label">a. Nature of activity:</span><span class="i-value">Over a two week period, meet with 60-80 employees regarding their right to support or not support a labor organization and encourage all to particpate in the election process.</span>
+<span class="i-label">a. Nature of activity:</span><span class="i-value">Hold meetings informing and educating employees on all aspects of unions in order for them to make an informed decision on whether or not to support a union.</span>
 </div>
 </div>
 <div class="row">
@@ -1014,14 +1015,14 @@
 </div>
 </div>
 <div style="padding-left :10px;">
-<span class="i-value">03/05/2021</span>
+<span class="i-value">01/2021</span>
 </div>
 </div>
 <div class="col-xs-12 noleft notop cell-special">
 <div style="overflow:hidden">
 <span class="i-label">11.c. Extent of performance:</span>
 <div class="i-sectionbody">
-<div class="i-value">03/18/2021</div>
+<div class="i-value">04/2021</div>
 </div>
 </div>
 </div>
@@ -1044,36 +1045,10 @@
 </div>
 <div class="row">
 <div class="i-sectionNumberTable">
-<span><span class="i-label">&nbsp; Name:</span><span class="i-value">Jorge Sandoval</span></span><span><span class="i-label">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Organization:</span><span class="i-value">Labor Communications Services, LLC</span></span>
+<span><span class="i-label">&nbsp; Name:</span><span class="i-value">Byron Clay</span></span><span><span class="i-label">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Organization:</span><span class="i-value">Reliant Labor Consultants</span></span>
 </div>
 <div class="i-sectionNumberTable">
-<span><span class="i-label"> &nbsp; P.O. Box, Bldg., Room No., If any:</span><span class="i-value">PO Box 79710</span></span><span><span class="i-label">Street:</span><span class="i-value"></span></span><span><span class="i-label">City:</span><span class="i-value">Houston</span></span><span><span class="i-label">State:</span><span class="i-value">TX</span></span><span><span class="i-label">Zip:</span>77279</span>
-</div>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-24 notop">
-<div>
-<div class="i-sectionNumberTable">
-<div class="row">
-<div class="col-xs-1">
-<span class="i-label">11.d.</span>
-</div>
-<div class="col-xs-23">
-<span class="i-label">Name and address of person(s) through
-															whom
-															activities were performed or will be performed:</span>
-</div>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="i-sectionNumberTable">
-<span><span class="i-label">&nbsp; Name:</span><span class="i-value">Manny Gonzalez</span></span><span><span class="i-label">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Organization:</span><span class="i-value">Labor Communications Services, LLC</span></span>
-</div>
-<div class="i-sectionNumberTable">
-<span><span class="i-label"> &nbsp; P.O. Box, Bldg., Room No., If any:</span><span class="i-value">PO Box 79710</span></span><span><span class="i-label">Street:</span><span class="i-value"></span></span><span><span class="i-label">City:</span><span class="i-value">Houston</span></span><span><span class="i-label">State:</span><span class="i-value">TX</span></span><span><span class="i-label">Zip:</span>77279</span>
+<span><span class="i-label"> &nbsp; P.O. Box, Bldg., Room No., If any:</span><span class="i-value"></span></span><span><span class="i-label">Street:</span><span class="i-value">1011 Sonata Lane</span></span><span><span class="i-label">City:</span><span class="i-value">Apollo Beach</span></span><span><span class="i-label">State:</span><span class="i-value">FL</span></span><span><span class="i-label">Zip:</span>33572</span>
 </div>
 </div>
 </div>
@@ -1087,7 +1062,7 @@
 </div>
 </div>
 <div class="i-sectionbody">
-<span class="i-value">Warehouse and driving staff of employer</span>
+<span class="i-value">Nurses</span>
 </div>
 </div>
 </div>
@@ -1102,7 +1077,7 @@
 </div>
 <div>
 <div class="i-sectionbody">
-<span class="i-value">UFCW5</span>
+<span class="i-value">NATIONAL NURSES UNITED( NATIONAL HEADQUARTERS   ) - 544309</span>
 </div>
 </div>
 </div>

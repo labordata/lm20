@@ -575,7 +575,7 @@
 <div class="myTable">
 <div class="row">
 <div class="col-xs-8">
-<span class="i-label">1.a. File Number: C-</span><span class="i-value">69553</span>
+<span class="i-label">1.a. File Number: C-</span><span class="i-value">69565</span>
 </div>
 <div class="col-xs-8 noleft noright">
 <span class="i-label"></span>
@@ -600,25 +600,25 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Jason j Greer</span>
+<span class="i-label">Name:</span><span class="i-value">Byron J Clay</span>
 </div>
 <div>
-<span class="i-label">Title:</span><span class="i-value">Labor Consultant</span>
+<span class="i-label">Title:</span><span class="i-value">President</span>
 </div>
 <div>
-<span class="i-label">Organization:</span><span class="i-value">Greer Consulting, Inc</span>
+<span class="i-label">Organization:</span><span class="i-value">BJC &amp; Associates</span>
 </div>
 <div>
 <span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">Street:</span><span class="i-value">4301 Hawkins Ridge Dr</span>
+<span class="i-label">Street:</span><span class="i-value">1011 Sonata Lane</span>
 </div>
 <div>
-<span class="i-label">City:</span><span class="i-value">St. Louis</span><span class="i-label">State:</span><span class="i-value">MO</span>
+<span class="i-label">City:</span><span class="i-value">Apollo Beach</span><span class="i-label">State:</span><span class="i-value">FL</span>
 </div>
 <div>
-<span class="i-label">ZIP code:</span>63129</div>
+<span class="i-label">ZIP code:</span>33572</div>
 </div>
 </div>
 <div class="col-xs-12 cell-lg-210 notop noleft">
@@ -666,7 +666,7 @@
 <span class="i-label">4.</span>
 </div>
 <div class="col-xs-23">
-<span class="i-label">Date fiscal year ends:</span><span class="i-value"><span class="i-value">Dec /</span>21</span>
+<span class="i-label">Date fiscal year ends:</span><span class="i-value"><span class="i-value">Dec /</span>20</span>
 </div>
 </div>
 </div>
@@ -685,7 +685,7 @@
 <div class="i-sectionbody">
 
 										a.
-										<span class="i-nocheckbox"></span>
+										<span class="i-xcheckbox">X</span>
 										Individual &nbsp; &nbsp; &nbsp; b.
 										<span class="i-nocheckbox"></span>
 										Partnership
@@ -694,7 +694,7 @@
 <div class="i-sectionbody">
 
 										c.
-										<span class="i-xcheckbox">X</span>
+										<span class="i-nocheckbox"></span>
 										Corporation C d.
 										<span class="i-nocheckbox"></span>
 										Other
@@ -733,26 +733,25 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Alison Scott-Williams</span>
+<span class="i-label">Name:</span><span class="i-value">Laurie Haynes</span>
 </div>
 <div>
-<span class="i-label">Organization:</span><span class="i-value">Studio in a School NYC, LLC</span>
+<span class="i-label">Organization:</span><span class="i-value">Mission Hospital</span>
 </div>
 <div>
 <span class="i-label">Trade Name, if any:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value">75</span>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">Street:</span><span class="i-value">West End Avenue</span>
+<span class="i-label">Street:</span><span class="i-value">509 Biltmore Ave</span>
 </div>
 <div>
-<span class="i-label">City:</span><span class="i-value">New York</span><span class="i-label">State:</span><span class="i-value">NY</span>
+<span class="i-label">City:</span><span class="i-value">Ashville</span><span class="i-label">State:</span><span class="i-value">NC</span>
 </div>
 <div>
-<span class="i-label">ZIP code:</span><span class="i-value">10023 - 7853</span>
-</div>
+<span class="i-label">ZIP code:</span>28801</div>
 </div>
 </div>
 <div class="col-xs-12 notop noleft cell-lg-210">
@@ -764,7 +763,7 @@
 </div>
 <div class="col-xs-23">
 <span class="i-label">
-														Date entered into</span><span class="i-value">02/16/2021</span>
+														Date entered into</span><span class="i-value">04/28/2020</span>
 </div>
 </div>
 </div>
@@ -783,7 +782,7 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Alison S Scott-Williams</span>
+<span class="i-label">Name:</span><span class="i-value">Scott Medsker</span>
 </div>
 <div></div>
 </div>
@@ -828,7 +827,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						SIGNED:
-					</span><span class="i-value">Jason j Greer</span>
+					</span><span class="i-value">Byron J Clay</span>
 </div>
 </div>
 <div class="row">
@@ -844,7 +843,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						Date:
-					</span><span class="i-value">Jul 13, 2021</span>
+					</span><span class="i-value">Jun 24, 2021</span>
 </div>
 </div>
 <div class="row">
@@ -852,7 +851,7 @@
 <div class="col-xs-15">
 <span class="i-label">
 						Telephone Number:
-					</span><span class="i-value">314-397-4218</span>
+					</span><span class="i-value">219-577-7420</span>
 </div>
 </div>
 </div>
@@ -866,7 +865,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						SIGNED:
-					</span><span class="i-value">Jason j Greer</span>
+					</span><span class="i-value"></span>
 </div>
 </div>
 <div class="row">
@@ -882,7 +881,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						Date:
-					</span><span class="i-value">Jul 13, 2021</span>
+					</span><span class="i-value"></span>
 </div>
 </div>
 <div class="row">
@@ -890,7 +889,7 @@
 <div class="col-xs-15">
 <span class="i-label">
 						Telephone Number:
-					</span><span class="i-value">314-397-4218</span>
+					</span><span class="i-value"></span>
 </div>
 </div>
 </div>
@@ -966,10 +965,10 @@
 </div>
 <div class="activityTable">
 <div class="row">
-<span><span class="i-xcheckbox">X</span></span><span class="i-value">Written Agreement/Arrangement</span>
+<span><span class="i-nocheckbox"></span></span><span class="i-value">Written Agreement/Arrangement</span>
 </div>
 <div class="row">
-<div class="col-xs-22">The parties agree that pursuant to this agreement, GCI will provide 1 labor relations consultant who shall dedicate 100% of their professional services time to providing the applicable Consulting Services under this Agreement.</div>
+<div class="col-xs-22">Hold meetings informing employees on all aspect of unions for them to make an informed decision</div>
 </div>
 </div>
 </div>
@@ -1002,8 +1001,7 @@
 </div>
 <div class="row">
 <div class="col-xs-24 notop">
-<span class="i-label">a. Nature of activity:</span><span class="i-value">Consultants provided education on the National Labor Relations Board secret ballot election and the&#13;
-unionization process with employees</span>
+<span class="i-label">a. Nature of activity:</span><span class="i-value">Hold meetings to persuade employees to exercise or not exercise the right to organize through a labor union</span>
 </div>
 </div>
 <div class="row">
@@ -1017,14 +1015,14 @@ unionization process with employees</span>
 </div>
 </div>
 <div style="padding-left :10px;">
-<span class="i-value">02/16/2021 to 4/16/2021</span>
+<span class="i-value">4/2020-6/2020</span>
 </div>
 </div>
 <div class="col-xs-12 noleft notop cell-special">
 <div style="overflow:hidden">
 <span class="i-label">11.c. Extent of performance:</span>
 <div class="i-sectionbody">
-<div class="i-value">To Completion</div>
+<div class="i-value">ongoing</div>
 </div>
 </div>
 </div>
@@ -1047,10 +1045,10 @@ unionization process with employees</span>
 </div>
 <div class="row">
 <div class="i-sectionNumberTable">
-<span><span class="i-label">&nbsp; Name:</span><span class="i-value">Chastity Hudson</span></span><span><span class="i-label">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Organization:</span><span class="i-value">Greer Consulting, Inc.</span></span>
+<span><span class="i-label">&nbsp; Name:</span><span class="i-value">Joseph Brock</span></span><span><span class="i-label">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Organization:</span><span class="i-value">Reliant Labor Consultants</span></span>
 </div>
 <div class="i-sectionNumberTable">
-<span><span class="i-label"> &nbsp; P.O. Box, Bldg., Room No., If any:</span><span class="i-value">4301</span></span><span><span class="i-label">Street:</span><span class="i-value">Hawkins Ridge Dr.</span></span><span><span class="i-label">City:</span><span class="i-value">St. Louis</span></span><span><span class="i-label">State:</span><span class="i-value">MO</span></span><span><span class="i-label">Zip:</span>63129</span>
+<span><span class="i-label"> &nbsp; P.O. Box, Bldg., Room No., If any:</span><span class="i-value">1011 Sonata Lane</span></span><span><span class="i-label">Street:</span><span class="i-value">1011 Sonata Lane</span></span><span><span class="i-label">City:</span><span class="i-value">Apollo Beach</span></span><span><span class="i-label">State:</span><span class="i-value">FL</span></span><span><span class="i-label">Zip:</span>33572</span>
 </div>
 </div>
 </div>
@@ -1064,7 +1062,7 @@ unionization process with employees</span>
 </div>
 </div>
 <div class="i-sectionbody">
-<span class="i-value">Teaching Artists</span>
+<span class="i-value">Nurses</span>
 </div>
 </div>
 </div>
@@ -1079,7 +1077,7 @@ unionization process with employees</span>
 </div>
 <div>
 <div class="i-sectionbody">
-<span class="i-value">Technical, Office and Professional Union, Local 2110 UAW, AFL-CIO</span>
+<span class="i-value">NATIONAL NURSES UNITED( NATIONAL HEADQUARTERS   ) - 544309</span>
 </div>
 </div>
 </div>

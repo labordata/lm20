@@ -694,9 +694,9 @@
 <div class="i-sectionbody">
 
 										c.
-										<span class="i-xcheckbox">X</span>
-										Corporation C d.
 										<span class="i-nocheckbox"></span>
+										Corporation C d.
+										<span class="i-xcheckbox">X</span>
 										Other
 
 
@@ -707,7 +707,7 @@
 <span class="i-label"></span>
 </div>
 <div class="col-xs-23">
-<span class="i-label">Specify:</span><span class="i-value"></span>
+<span class="i-label">Specify:</span><span class="i-value">LLC</span>
 </div>
 </div>
 </div>
@@ -733,10 +733,10 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Sheila Kalteux</span>
+<span class="i-label">Name:</span><span class="i-value">Patrick Craine</span>
 </div>
 <div>
-<span class="i-label">Organization:</span><span class="i-value">LinCare, Inc.</span>
+<span class="i-label">Organization:</span><span class="i-value">GULFPORT ENERGY CORPORATION</span>
 </div>
 <div>
 <span class="i-label">Trade Name, if any:</span><span class="i-value"></span>
@@ -745,13 +745,13 @@
 <span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
 </div>
 <div>
-<span class="i-label">Street:</span><span class="i-value">53 Capital Drive</span>
+<span class="i-label">Street:</span><span class="i-value">3001 Quail Springs Parkway</span>
 </div>
 <div>
-<span class="i-label">City:</span><span class="i-value">West Springfield</span><span class="i-label">State:</span><span class="i-value">MA</span>
+<span class="i-label">City:</span><span class="i-value">Oklahoma City</span><span class="i-label">State:</span><span class="i-value">OK</span>
 </div>
 <div>
-<span class="i-label">ZIP code:</span>01089</div>
+<span class="i-label">ZIP code:</span>73134</div>
 </div>
 </div>
 <div class="col-xs-12 notop noleft cell-lg-210">
@@ -763,7 +763,7 @@
 </div>
 <div class="col-xs-23">
 <span class="i-label">
-														Date entered into</span><span class="i-value">06/16/2020</span>
+														Date entered into</span><span class="i-value">08/05/2020</span>
 </div>
 </div>
 </div>
@@ -782,7 +782,7 @@
 </div>
 <div class="i-sectionbody">
 <div>
-<span class="i-label">Name:</span><span class="i-value">Sheila Kalteux</span>
+<span class="i-label">Name:</span><span class="i-value">Patrick Craine</span>
 </div>
 <div></div>
 </div>
@@ -843,7 +843,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						Date:
-					</span><span class="i-value">Jul 15, 2020</span>
+					</span><span class="i-value">Sep 11, 2020</span>
 </div>
 </div>
 <div class="row">
@@ -881,7 +881,7 @@
 <div class="col-xs-22">
 <span class="i-label">
 						Date:
-					</span><span class="i-value">Jul 15, 2020</span>
+					</span><span class="i-value">Sep 11, 2020</span>
 </div>
 </div>
 <div class="row">
@@ -965,10 +965,12 @@
 </div>
 <div class="activityTable">
 <div class="row">
-<span><span class="i-nocheckbox"></span></span><span class="i-value">Written Agreement/Arrangement</span>
+<span><span class="i-xcheckbox">X</span></span><span class="i-value">Written Agreement/Arrangement</span>
 </div>
 <div class="row">
-<div class="col-xs-22">Oral agreement made through Kulture Consulting, $2,500 per day, plus actual and reasonable expenses.</div>
+<div class="col-xs-22">Written agreement made through Kulture Consulting, LLC $375 per hour, plus actual and reasonable expenses.&#13;
+&#13;
+See Attached Retainer Agreement.</div>
 </div>
 </div>
 </div>
@@ -1015,7 +1017,7 @@
 </div>
 </div>
 <div style="padding-left :10px;">
-<span class="i-value">Various days beginning 6/16/2020</span>
+<span class="i-value">Various dates beginning 8/05/2020</span>
 </div>
 </div>
 <div class="col-xs-12 noleft notop cell-special">
@@ -1045,10 +1047,10 @@
 </div>
 <div class="row">
 <div class="i-sectionNumberTable">
-<span><span class="i-label">&nbsp; Name:</span><span class="i-value">Juan Negroni</span></span><span><span class="i-label">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Organization:</span><span class="i-value">The Tally Consultancy, LLC</span></span>
+<span><span class="i-label">&nbsp; Name:</span><span class="i-value">Kirk Cummings</span></span><span><span class="i-label">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Organization:</span><span class="i-value">Cummings Group, LLC</span></span>
 </div>
 <div class="i-sectionNumberTable">
-<span><span class="i-label"> &nbsp; P.O. Box, Bldg., Room No., If any:</span><span class="i-value">PO Box 494</span></span><span><span class="i-label">Street:</span><span class="i-value"></span></span><span><span class="i-label">City:</span><span class="i-value">Norwalk</span></span><span><span class="i-label">State:</span><span class="i-value">CT</span></span><span><span class="i-label">Zip:</span>06852</span>
+<span><span class="i-label"> &nbsp; P.O. Box, Bldg., Room No., If any:</span><span class="i-value">PO Box 882</span></span><span><span class="i-label">Street:</span><span class="i-value"></span></span><span><span class="i-label">City:</span><span class="i-value">Lapeer</span></span><span><span class="i-label">State:</span><span class="i-value">MI</span></span><span><span class="i-label">Zip:</span>48446</span>
 </div>
 </div>
 </div>
@@ -1062,9 +1064,9 @@
 </div>
 </div>
 <div class="i-sectionbody">
-<span class="i-value">Included: Healthcare Specialists, Customer Service Representatives and Service Representatives.&#13;
+<span class="i-value">Included: All full-time and regular part-time Operators, Maintenance Technicians, Measurement Technicians, I &amp; E Technicians, Control Room Technicians, Facilities Technicians and Water Dispatchers employed at the Employers facility located at 67185 Executive Dr., St. Clairsville, Ohio.&#13;
 &#13;
-Excluded: All other employees including Managers, Supervisors, Sales Representatives and Guards as defined in the Act.</span>
+Excluded:All office clerical employees, professional employees, guards and supervisorsas defined in the Act.</span>
 </div>
 </div>
 </div>
@@ -1079,7 +1081,7 @@ Excluded: All other employees including Managers, Supervisors, Sales Representat
 </div>
 <div>
 <div class="i-sectionbody">
-<span class="i-value">TEAMSTERS( JOINT COUNCIL 10) - 29242</span>
+<span class="i-value">UTILITY WORKERS UNION OF AMERICA</span>
 </div>
 </div>
 </div>

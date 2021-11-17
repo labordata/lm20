@@ -51,6 +51,1938 @@
 
 
 
+<html xmlns:erds-extensions="xalan://gov.dol.olms.erds.query.ui.util.ERDSXSLExtensions" xmlns:xalan="http://xml.apache.org/xslt" ng-app="LM20App">
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="css/bootstrap.min.new.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/YUI/angular/scripts/jquery/jquery-1.11.1/jquery-1.11.1.js"></script><script type="text/javascript" src="/YUI/angular/scripts/angularjs_1_x/angular.min.js"></script><script>
+
+					angular.module('LM20App', [])
+					.controller('MainCtrl',
+					function($scope) {
+					$scope.greeting = "Hello World";
+					});  	
+						
+				</script>
+<style>
+
+
+					.verticalFont {
+					font-size: 1.5em;
+					font-weight: bold;
+					font-family:
+					sans-serif;
+
+					}
+
+					.verticalFORM {
+					Transform:
+					rotate(-90deg);
+					transform-origin: right,
+					top;
+					-ms-Transform:
+					rotate(-90deg);
+					-ms-transform-origin: right, top;
+					-webkit-transform:
+					rotate(-90deg);
+					-webkit-transform-origin: right,
+					top;
+					position:
+					absolute;
+					top: 20px;
+					left: -5px;
+					}
+
+
+					.verticalOLMS {
+					transform:
+					rotate(-270deg);
+					transform-origin: right,
+					top;
+					-ms-transform:
+					rotate(-270deg);
+					-ms-transform-origin: right, top;
+					-webkit-transform:
+					rotate(-270deg);
+					-webkit-transform-origin: right,
+					top;
+					position:
+					absolute;
+					top: 20px;
+					right: -5px ;
+					}
+
+					.verical_container {
+					position:
+					relative;
+					height: 90px;
+					}
+
+					.reportnameFont
+					{
+					font-size:
+					2em;
+					font-weight:
+					bold;
+					font-family:
+					sans-serif;
+					}
+					.olmsnameFont
+					{
+					font-size:
+					1.6em;
+					font-weight: bold;
+					font-family:
+					sans-serif;
+					text-align : right;
+					}
+
+
+					.rightBorder {
+					border-right: solid 2px ;
+					// margin-left : 7px;
+					}
+
+					.readCarfully {
+					padding-top :
+					5px;
+					font-style:
+					italic;
+					text-align :
+					center ;
+					font-size
+					: .9em ;
+
+
+					}
+
+					.tinyFont {
+					font-size
+					: .8em ;
+					}
+
+					.smallFont {
+					font-size : .8em
+					;
+					}
+
+					@page
+					{
+					size: auto;
+
+					margin-top
+					:
+					10mm;
+					margin-right :
+					5mm;
+					margin-bottom : 10mm;
+					margin-left : 6mm;
+
+					}
+
+					.notop {
+
+					border-top :
+					none ;
+					}
+
+
+
+					.cell-special {
+					height :
+					70px;
+
+					}
+					.cell-sm {
+					height : 40px;
+
+					}
+					.cell-md {
+					height : 190px;
+
+					}
+
+
+
+					.cell-lg {
+					height : 230px;
+					}
+
+					.cell-lg-210 {
+					height : 190px;
+					}
+					
+					.cell-lg-175 {
+					height : 210px;
+					}
+					
+					.cell-lg-117 {
+					height : 117px;
+
+					}
+
+					.cell-half {
+					height : 80px;
+
+					}
+
+					.myTable {
+					padding-top :
+					2px;
+					padding-right :
+					20px;
+					padding-bottom :
+					2px;
+					padding-left :
+					20px;
+					}
+					.myTable
+					[class*="col-"] hr
+					{
+					margin-top : 3px;
+					margin-bottom :
+					3px;
+					border: 0;
+					border-top : 1px
+					solid ;
+
+					}
+					.myTable
+					[class*="col-"] {
+					padding-top :0px;
+					padding-right :
+					0px;
+					padding-bottom : 0px;
+					padding-left : 0px;
+					border
+					:
+					1px solid ;
+					}
+
+					.myTable
+					[class*="col-"].notop {
+					border-top : none ;
+					}
+
+					.myTable
+					[class*="col-"].noleft {
+					border-left : none ;
+					}
+
+
+
+
+
+
+
+
+
+
+					.activityTable {
+					padding-top : 10px;
+					padding-right :
+					20px;
+					padding-bottom :
+					10px;
+					padding-left :
+					30px;
+					}
+
+					.activityTable
+					[class*="col-"] {
+					padding-top
+					:0px;
+					padding-right :
+					0px;
+					padding-bottom : 0px;
+					padding-left : 5px;
+					border
+					:
+					none ;
+					}
+
+
+
+					.activityTable .actvitiesInnerTable {
+					padding-left :
+					0px;
+					padding-right : 0px;}
+
+					.activityTable .actvitiesInnerTable
+					[class*="col-"] {
+					padding-top
+					:2px;
+					padding-right :
+					12px;
+					padding-left
+					:
+					0px;
+					padding-bottom : 0px;
+					border :
+					none ;
+
+					}
+
+
+					.rpt-pad-box {
+					margin-left
+					:
+					7px ;
+					}
+
+
+
+					.i-sectionNumberTable {
+					padding-top : 5px;
+					padding-right :
+					10px;
+					padding-bottom :
+					0px;
+					padding-left :
+					15px;
+					}
+
+					.i-sectionNumberTable
+					[class*="col-"] {
+					padding-top
+					:0px;
+					padding-right :
+					10px;
+					padding-bottom
+					: 0px;
+					padding-left : 5px;
+					border
+					:
+					none ;
+					}
+
+
+					.i-sectionbody {
+					padding-left :
+					10px;
+					padding-top
+					: 4px;
+					}
+
+					.i-sectionbody div{
+					padding-bottom :4px;
+					max-width:350px;
+					max-height:
+					20px;
+					overflow:
+					hidden;
+					white-space : nowrap ;
+
+					}
+
+					.i-terms {
+					max-width:550px;
+					overflow: hidden;
+
+					}
+
+					.i-label {
+					font-weight: bold ;
+					color : black;
+
+					padding-right : 5px;
+
+
+					}
+					.i-value{
+
+					padding-right : 5px;
+
+					}
+					.i-checkbox {
+					padding-left
+					:
+					5px;
+					padding-right :
+					5px;
+
+					}
+					
+					.i-xcheckbox{
+					  background-color: white;
+					  height:14px;
+					  width: 10px;
+					  border: 1px solid black;
+					  padding: 2px;
+					  margin:4px;
+					}
+					
+					.i-nocheckbox{
+					  background-color: white;
+					  width: 2px;
+					  border: 1px solid black;
+					  padding-left:2px;
+					  padding-right:9px;
+					  padding-bottom:0px;
+					  padding-bottom:0px;
+					  margin:4px;
+					}
+
+					.fontbold {
+					font-weight : bold
+					;
+					}
+
+
+					body {
+					font-size
+					: 1.2em;
+					}
+
+
+
+					@media
+					screen {
+					#custom-doc {
+					background-color:
+					gray;
+					padding-top: 15px;
+					margin: auto;
+					padding-bottom: 50px;
+					}
+					#custom-printpage {
+					border-width: 10px;
+					border-style: solid;
+					border-color: white;
+					margin:
+					auto;
+					width: 800px;
+					background-color:
+					white;
+					min-width : 800px;
+
+
+					}
+					}
+					.report-container {
+
+					}
+
+					table.addTable {
+					border-collapse: collapse;
+					width: 98.6%;
+					border: 1px
+					solid black;
+					margin-left : 5px ;
+
+					padding-bottom :5px ;
+					}
+
+					table.addTable thead th{
+					text-align
+					: left;
+					padding: 1px;
+					}
+
+					table.addTable th ,table.addTable td
+					{
+					text-align:
+					left;
+					padding:
+					4px;
+					border: 1px solid black;
+					}
+
+					table.addTable
+					tr:nth-child(even){background-color: #f2f2f2;
+					}
+
+					.seeAttached {
+					font-style : italic ;
+					padding : 15px;
+
+					}
+					@media print {
+					.hideIfPrint {
+					display : none
+					}
+					}
+
+					@media screen {
+					.hideIfScreen {
+					display : none
+					}
+					}
+					
+								
+					
+				</style>
+</head>
+<body ng-controller="MainCtrl">
+<div class="report-container">
+<div class="row">
+<div class="col-xs-12 rightBorder">
+<div class="row">
+<div class="col-xs-2">
+<div class="verical_container">
+<div class="verticalFORM verticalFont">FORM</div>
+</div>
+</div>
+<div class="col-xs-22 reportnameFont">
+<div>LM-21 - RECEIPTS</div>
+<div>&amp; DISBURSEMENTS REPORT</div>
+</div>
+</div>
+<div class="tinyFont">
+<div>
+										OMB No.
+										1245-0003
+										.
+
+										Expires
+										09-30-2021
+										.
+									</div>
+<div>IMPORTANT: This report is mandatory under P.L. 86-257, as
+										amended. Failure to comply may result in criminal prosecution,
+										fines, or civil penalties as provided by 29 U.S.C. 439 or 440.
+										Required of persons, including Labor Relations Consultants and
+										Other Individuals and Organizations, under Section 203(b) of
+										the
+										Labor-Management Reporting and Disclosure Act of 1959, as
+										amended (LMRDA).</div>
+</div>
+</div>
+<div class="col-xs-12">
+<div class="row">
+<div class="col-xs-22">
+<div class="olmsnameFont">Office of Labor-Management Standards</div>
+<div class="olmsnameFont">U.S. Department of Labor</div>
+<div style="height:80px;" class="rpt-pad-box">
+<div>For Official Use Only</div>
+<div style="font-weight:bold;">E</div>
+</div>
+</div>
+<div class="col-xs-2">
+<div class="verical_container">
+<div class="verticalOLMS verticalFont">OLMS</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-17 col-xs-offset-4"></div>
+</div>
+</div>
+</div>
+<div class="readCarfully">
+<span aria-hidden="true" class="glyphicon glyphicon-triangle-right"></span>
+							Read the instructions carefully before completing this report.
+							<span aria-hidden="true" class="glyphicon glyphicon-triangle-left"></span>
+</div>
+<div class="myTable">
+<div class="row">
+<div class="col-xs-24">
+<span class="i-label">1. File Number: C-</span><span class="i-value">68675</span><span><span class="i-label">&nbsp; &nbsp; &nbsp;  2. Period Covered by this report</span><span class="i-label"> From: </span><span class="i-value">01/01/2020</span><span class="i-label"> Through: </span><span class="i-value">12/31/2020</span></span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-24 notop">
+<span class="i-label">A. Person Filing</span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-210 notop">
+<div class="i-sectionNumberTable">
+<div class="row">
+<div class="col-xs-23">
+<span class="i-label">3. Name and mailing address (including Zip Code):</span>
+</div>
+</div>
+</div>
+<div class="i-sectionbody">
+<div>
+<span class="i-label">Name:</span><span class="i-value">Raymond Rosenbach</span>
+</div>
+<div>
+<span class="i-label">Title:</span><span class="i-value">Treasurer</span>
+</div>
+<div>
+<span class="i-label">Organization:</span><span class="i-value">Government Resources Consultants of America Inc</span>
+</div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value">434</span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">75 Commerce Dr</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Grayslake</span><span class="i-label">State:</span><span class="i-value">IL</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>60030</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-210 notop noleft">
+<div class="i-sectionNumberTable">
+<div class="row">
+<div class="col-xs-23">
+<span class="i-label">4. Any other address where records necessary to
+													verify this report are kept:</span>
+</div>
+</div>
+</div>
+<div class="i-sectionbody">
+<div>
+<span class="i-label">Name:</span><span class="i-value"> </span>
+</div>
+<div>
+<span class="i-label">Title:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Organization:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value"></span><span class="i-label">State:</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h5 class="rpt-instruction-centered">Signature and Verification</h5>
+<div class="myTable">
+<div class="row">
+<div style="padding : 5px;" class="col-xs-24">
+<span class="tinyFont">Each
+										of the undersigned declares, under penalty
+										of
+										perjury
+										and
+										other
+										applicable penalties of law, that all of the
+										information
+										submitted in this report (including the information
+										contained in
+										any accompanying documents) has been examined by
+										the
+										signatory
+										and
+										is, to the best of the undersigned's
+										knowledge
+										and
+										belief,
+										true, correct, and complete. (See Section
+										VII on
+										penalties in the
+										instructions.)</span>
+<div class="activityTable">
+<div class="row">
+<div class="col-xs-12">
+<div class="myTable">
+<div class="row">
+<div class="col-xs-2">
+<span class="i-label">17.</span>
+</div>
+<div class="col-xs-22">
+<span class="i-label">
+						SIGNED:
+					</span><span class="i-value">David J Rittof</span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-2"></div>
+<div class="col-xs-22">
+<span class="i-label">
+						Title:
+					</span><span class="i-value">PRESIDENT</span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-2"></div>
+<div class="col-xs-22">
+<span class="i-label">
+						Date:
+					</span><span class="i-value">May 26, 2021</span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-2"></div>
+<div class="col-xs-15">
+<span class="i-label">
+						Telephone Number:
+					</span><span class="i-value">847-337-3480</span>
+</div>
+</div>
+</div>
+</div>
+<div class="col-xs-12">
+<div class="myTable">
+<div class="row">
+<div class="col-xs-2">
+<span class="i-label">18.</span>
+</div>
+<div class="col-xs-22">
+<span class="i-label">
+						SIGNED:
+					</span><span class="i-value">Raymond   Rosenbach</span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-2"></div>
+<div class="col-xs-22">
+<span class="i-label">
+						Title:
+					</span><span class="i-value">TREASURER</span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-2"></div>
+<div class="col-xs-22">
+<span class="i-label">
+						Date:
+					</span><span class="i-value">May 26, 2021</span>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-2"></div>
+<div class="col-xs-15">
+<span class="i-label">
+						Telephone Number:
+					</span><span class="i-value">847-209-0256</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="versionFooter">Form LM-21 (2003)</div>
+<div class="myTable">
+<div class="row">
+<div class="col-xs-24">
+<div class="i-sectionNumberTable">
+<div class="row">
+<div class="col-xs-1">
+<span class="i-label">B.</span>
+</div>
+<div class="col-xs-23">
+<span class="i-label">Statement of Receipts</span>
+												Report all receipts from employers in connection with labor 
+												relations advice or services regardless of the purposes of 
+												the advice or services. 
+											</div>
+</div>
+</div>
+<hr>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Cabell Huntington Hospital</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Kevin Fowler</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">President</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">1603 13th Street</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Huntington</span><span class="i-label">State:</span><span class="i-value">WA</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>43215</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">November 2019</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$155,654</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Schuetz Container Systems</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Ian Miller</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Vice President</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">2105 So Wilkinson Way</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Perrysberg</span><span class="i-label">State:</span><span class="i-value">OH</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>43551</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">October 2019</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$80,537</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Sysco Hampton Roads Inc</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Mike Larock</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">CFO</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">7000 Harbor View Rd</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Suffolk</span><span class="i-label">State:</span><span class="i-value">VA</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>23435</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">October 2019</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$78,955</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">ARKEMA Inc</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Steven Silver</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Director H R</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">12840 So Pulaski Rd</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Alsip</span><span class="i-label">State:</span><span class="i-value">IL</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>60803</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">August 2019</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$6,964</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">AAK USA Inc</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Bill Troy</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">SR Director US Manufacturing</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">499 Thornall Street</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Edison</span><span class="i-label">State:</span><span class="i-value">NJ</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>08837</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">January 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$83,713</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Materion</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Joseph Szafaniec</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">VP HR Manufacturing Operations</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">14710 Portage River South Rd</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Elmore</span><span class="i-label">State:</span><span class="i-value">OH</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>43416</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">January 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$62,915</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Pittsburgh Technical College</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Nancy S Starr</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">SPHR SHRM</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">1111 McKee Road</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Oakdale</span><span class="i-label">State:</span><span class="i-value">PA</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>15071</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">January 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$5,021</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">New York Blood Center Inc</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value">dba Blood Bank of Delmarva</span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Richard Thomas</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Sr Executive Director</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">100 Hygeia Dr</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Newarj</span><span class="i-label">State:</span><span class="i-value">NJ</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>19713</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">March 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$91,871</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">S T Engineering Hackney Inc</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Lee Goldberg</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">General Manager</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">941 Saegers Station Rd</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Montgomery</span><span class="i-label">State:</span><span class="i-value">PA</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>17752</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">February 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$10,296</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Grifols Shared Services North America Inc</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value">Interstate Blood Bank Inc</span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Simon Manoucherian</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Head of Legal</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">5121 Delmar Blvd</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">St Louis</span><span class="i-label">State:</span><span class="i-value">MO</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>63104</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">May 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$62,900</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">MDS Boring &amp; Drilling Inc</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Cortney Laney</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">VP COO</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">11900 Hirsch Rd</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Houston</span><span class="i-label">State:</span><span class="i-value">TX</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>77050</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">July 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$19,747</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Orchid Orthopedic Solutions</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Brian Shuler</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">HR Manager</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">6688 Dixie HWY</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Bridgeport</span><span class="i-label">State:</span><span class="i-value">MI</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>48722</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">October 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$106,389</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">F X Freight Exchange</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Steve Walton</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Chief Growth Officer</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">1765  N Elston Ave</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Chicago</span><span class="i-label">State:</span><span class="i-value">IL</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>60642</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">September 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$49,944</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+</div>
+<div class="activityTable">
+<div style="border:1px solid black;" class="row">
+<div class="col-xs-13 cell-lg-117 notop">
+<span class="i-label">5.a.</span><span class="i-label">Name and Address of Employer (including trade name, if any). </span>
+<div class="col-xs-24">
+<div>
+<span class="i-label"> Employer: </span><span class="i-value">Infra-Metals CO</span>
+</div>
+<div>
+<span class="i-label"> Trade Name: </span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Mark Haight</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">President</span>
+</div>
+</div>
+</div>
+<div class="col-xs-11 cell-lg-117 notop">
+<div>
+<span class="i-label">Mailing Address: </span>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">8 Pent Hwy</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Wallingford</span><span class="i-label">State:</span><span class="i-value">CT</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>06492</div>
+</div>
+</div>
+</div>
+<div style="border:1px solid black; border-top-style:none;" class="row">
+<span class="i-label">&nbsp; 5.b.</span><span class="i-label">Termination Date: </span><span class="i-value">November 2020</span><span class="i-label"> 5.c.</span><span class="i-label">Amount:</span><span class="i-value">$38,836</span><span class="i-label">&nbsp; &nbsp; &nbsp; Non-Cash Payment:</span><span class="i-nocheckbox"></span>
+<div>
+<span class="i-label">&nbsp;&nbsp;&nbsp; Type of Payment: </span><span class="i-value">check</span>
+</div>
+<br>
+</div>
+<div class="row">
+<hr>
+<span class="i-label">6.</span><span class="i-label">TOTAL RECEIPTS FROM ALL EMPLOYERS: </span><span class="i-value">$853,742</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="myTable">
+<div class="row">
+<div class="col-xs-24">
+<div class="i-sectionNumberTable">
+<div class="row">
+<div class="col-xs-1">
+<span class="i-label">C.</span>
+</div>
+<div class="col-xs-23">
+<span class="i-label">Statement of Disbursements</span>
+													Report all disbursements made by the reporting organization in connection with labor relations advice or services rendered to the employers listed in Part B.
+												</div>
+</div>
+<div class="row">
+<div class="col-xs-1">
+<span class="i-label">7.</span>
+</div>
+<div class="col-xs-23">
+<div class="i-label">Disbursements to Officers and Employees: </div>
+</div>
+</div>
+<div class="row">
+<table class="addTable">
+<thead>
+<tr>
+<th width="43.5%" style="text-align:center">(a) Name</th><th style="text-align:center">(b) Salary</th><th style="text-align:center">(c) Expense</th><th style="text-align:center">(d) Totals</th>
+</tr>
+</thead>
+<tr>
+<th><span class="i-label"><span></span><span><span class="i-value">David J Rittof</span></span></span></th><th style="text-align:right"><span><span class="i-value">$360,000</span></span></th><th style="text-align:right"><span><span class="i-value">$2,944</span></span></th><th style="text-align:right"><span><span class="i-value">$362,944</span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span></span><span><span class="i-value">Noble Miller</span></span></span></th><th style="text-align:right"><span><span class="i-value">$21,000</span></span></th><th style="text-align:right"><span><span class="i-value">$7,538</span></span></th><th style="text-align:right"><span><span class="i-value">$28,538</span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span></span><span><span class="i-value">Gary Riseling</span></span></span></th><th style="text-align:right"><span><span class="i-value">$4,025</span></span></th><th style="text-align:right"><span><span class="i-value">$4,277</span></span></th><th style="text-align:right"><span><span class="i-value">$8,302</span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span></span><span><span class="i-value">George Hartnett</span></span></span></th><th style="text-align:right"><span><span class="i-value">$3,787</span></span></th><th style="text-align:right"><span><span class="i-value">$0</span></span></th><th style="text-align:right"><span><span class="i-value">$3,787</span></span></th>
+</tr>
+</table>
+<table class="addTable">
+<thead></thead>
+<tr>
+<th><span class="i-label"><span>8. </span><span><span class="i-value">Total disbursements to officers and employees:</span></span></span></th><th style="text-align:right" width="18%"><span><span class="i-value">$403,571</span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span>9. </span><span><span class="i-value">Officer and Administrative Expenses:</span></span></span></th><th style="text-align:right" width="18%"><span><span class="i-value">$68,483</span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span>10. </span><span><span class="i-value">Publicity:</span></span></span></th><th style="text-align:right" width="18%"><span><span class="i-value"></span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span>11. </span><span><span class="i-value">Fees for Professional Services:</span></span></span></th><th style="text-align:right" width="18%"><span><span class="i-value">$5,609</span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span>12. </span><span><span class="i-value">Loans Made:</span></span></span></th><th style="text-align:right" width="18%"><span><span class="i-value"></span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span>13. </span><span><span class="i-value">Other Disbursements:</span></span></span></th><th style="text-align:right" width="18%"><span><span class="i-value">$83,979</span></span></th>
+</tr>
+<tr>
+<th><span class="i-label"><span>14. </span><span><span class="i-value">Total Disbursements (Sum of Items 8-13):</span></span></span></th><th style="text-align:right" width="18%"><span><span class="i-value">$561,642</span></span></th>
+</tr>
+</table>
+</div>
+</div>
+<div class="activityTable">
+<div class="row"></div>
+</div>
+</div>
+</div>
+<div class="versionFooter">Form LM-21 (2003)</div>
+</div>
+<div class="myTable">
+<div class="row">
+<div class="col-xs-24">
+<div class="i-sectionNumberTable">
+<div class="row">
+<div class="col-xs-1">
+<span class="i-label">D.</span>
+</div>
+<div class="col-xs-23">
+<span class="i-label">Schedule of Disbursements for Reportable Activity </span>
+												Use this schedule to report only disbursements made for the purposes described in Part D of the instructions.
+											</div>
+</div>
+</div>
+<hr>
+<div class="activityTable">
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Brigitte Daniela Munoz Sanchez</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Labor Consultant</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value">CSAV360</span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">8 Carlton Court</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Staten Island</span><span class="i-label">State:</span><span class="i-value">NY</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>10312</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value"></span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$76,316</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value">CSAV 360</span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Keith Peraino</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">President</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value">CSAV 360</span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">8 Carlton Ct</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Staten Island</span><span class="i-label">State:</span><span class="i-value">NY</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>10312</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value"></span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$72,237</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Dawn Chapman</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Partner</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value">D &amp; G Creative Consulting LLC</span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value">#20213</span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">315 Grand Magnolia Ave</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Celebration</span><span class="i-label">State:</span><span class="i-value">FL</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>34747</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value">D &amp; G Creative Consulting LLC</span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$19,039</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Daniel C Bryant</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Owner</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value">CSAV 360</span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">8 Carlton Ct</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Staten Island</span><span class="i-label">State:</span><span class="i-value">NY</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>10312</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value">JDC &amp; Affiliates</span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$15,744</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Katie Parry</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Labor Consultant</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value">CSAV360</span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">8 Carlton Ct</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Staten Island</span><span class="i-label">State:</span><span class="i-value">NY</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>10312</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value"></span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$10,262</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Timothy Lewis</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Labor Consultant</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value">Lewis Labor relations</span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">10731 Trailwood Dr</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Chesterfield</span><span class="i-label">State:</span><span class="i-value">VA</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>23832</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value">Lewis Labor Telations</span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$47,369</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Michael Indivero</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Labor Consultant</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value"></span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">16216 32nd Street</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Mill Creak</span><span class="i-label">State:</span><span class="i-value">WA</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>98012</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value"></span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$14,444</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Juan R Santana</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Labor Consultant</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value">CSAV360</span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">8 Carlton Court</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Staten Island</span><span class="i-label">State:</span><span class="i-value">NY</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>10312</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value">SSS Consulting LLC</span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$15,629</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<div class="col-xs-12 cell-lg-175 notop">
+<div>
+<span class="i-label">15.a.  Employer Name: </span><span><span class="i-value"></span></span>
+<div>
+<br>
+<hr>
+</div>
+<div>
+<span class="i-label">15.c. To Whom Paid: </span>
+</div>
+<div>
+<span class="i-label"> Name: </span><span class="i-value">Leonard Pawelski</span>
+</div>
+<div>
+<span class="i-label"> Title: </span><span class="i-value">Labor Consultant</span>
+</div>
+<div>
+<span class="i-label"> Organization: </span><span class="i-value"></span>
+</div>
+</div>
+<div>
+<div>
+<span class="i-label">P.O. Box., Bldg., Room No., if any:</span><span class="i-value"></span>
+</div>
+<div>
+<span class="i-label">Street:</span><span class="i-value">12701 Aston Oaks Drive</span>
+</div>
+<div>
+<span class="i-label">City:</span><span class="i-value">Fort Meyers</span><span class="i-label">State:</span><span class="i-value">FL</span>
+</div>
+<div>
+<span class="i-label">ZIP code:</span>33912</div>
+</div>
+</div>
+<div class="col-xs-12 cell-lg-175 notop noleft">
+<div>
+<div class="i-label">15.b. Trade Name, If any: </div>
+<span class="i-value"></span>
+</div>
+<hr>
+<span class="i-label"> 15.d.Amount:</span><span class="i-value">$6,432</span>
+<hr>
+<div class="i-label"></div>
+<span class="i-label">15.e.Purpose: </span><span class="i-value">Consulting work on case</span>
+</div>
+</div>
+<div class="row">
+<hr>
+</div>
+<div class="row">
+<hr>
+<span class="i-label">16.</span><span class="i-label">TOTAL DISBURSEMENTS FOR ALL REPORTABLE ACTIVITY: </span><span class="i-value">$277,472</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="versionFooter">Form LM-21 (2003)</div>
+</body>
+</html>
 
  
 
