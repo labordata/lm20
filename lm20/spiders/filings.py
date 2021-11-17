@@ -53,4 +53,3 @@ class LM20(Spider):
             del filing['fileDesc']
 
             yield filing
-

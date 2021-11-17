@@ -9,7 +9,7 @@ from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from scrapy.pipelines.files import FilesPipeline
 from scrapy.utils.python import to_bytes
-
+from scrapy.http import Request
 
 class TimestampToDatetime:
     def process_item(self, item, spider):
@@ -28,7 +28,7 @@ class TimestampToDatetime:
         return item
 
 class ReportLink:
-    def process_item(self, item, spider):
+    async def process_item(self, item, spider):
         adapter = ItemAdapter(item)
 
         report_id = adapter.get('rptId')
@@ -42,8 +42,32 @@ class ReportLink:
 
             adapter['file_urls'] = [ report_url ]
 
+            
+            request = Request(report_url,
+                              method='HEAD')
+            response = await spider.crawler.engine.download(request, spider)
+
+            adapter['file_headers'] = {request.url: response.headers}
+
         return item
-                                  
+
+
+class AttachmentHeaders:
+    async def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+        
+        adapter['file_headers'] = {}
+        for file_url in adapter['file_urls']:
+
+            request = Request(file_url,
+                              method='HEAD')
+            response = await spider.crawler.engine.download(request, spider)
+
+            adapter['file_headers'][file_url] = response.headers
+
+        return item
+
+    
 class Nullify:
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
@@ -115,8 +139,11 @@ class StandardDate:
 class HeaderMimetypePipeline(FilesPipeline):
 
     def file_path(self, request, response=None, info=None, *, item=None):
+
         if response is None:
-            return None
+            headers = item['file_headers'][request.url]
+        else:
+            headers = response.headers
 
         media_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
         media_ext = os.path.splitext(request.url)[1]
@@ -128,6 +155,21 @@ class HeaderMimetypePipeline(FilesPipeline):
            if media_type:
                media_ext = mimetypes.guess_extension(media_type)
            else:
-               media_ext = mimetypes.guess_extension(response.headers.get('Content-Type').decode("utf"))
+               media_ext = mimetypes.guess_extension(headers.get('Content-Type').decode("utf").split(';')[0])
+               if media_ext is None:
+                   media_ext = ''
+
+           if media_ext == '':
+               breakpoint()
+
+            
 
         return f'full/{media_guid}{media_ext}'
+
+    def parse_header(response, request, info, items):
+        breakpoint()
+
+        return self.file_path(request,
+                              response=response,
+                              info=info,
+                              item=item)

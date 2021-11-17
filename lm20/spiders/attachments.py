@@ -7,6 +7,7 @@ class Attachments(Spider):
 
     custom_settings = {
         'ITEM_PIPELINES': {
+            'lm20.pipelines.AttachmentHeaders': 1,
             'lm20.pipelines.HeaderMimetypePipeline': 3
         }
     }
@@ -36,6 +37,8 @@ class Attachments(Spider):
                               formdata={'clearCache': 'F', 'page': str(page)},
                               cb_kwargs={'page': page},
                               callback=self.parse)
+
+    
 
     def parse_filings(self, response):
         """
