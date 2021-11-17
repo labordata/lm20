@@ -14,10 +14,12 @@ lm20.db : filer.csv filing.csv attachment.csv employer.csv
             --drop termDate \
             --drop amount \
             --drop empTrdName \
+            --drop file_headers \
             --drop formLink
 	sqlite-utils transform $@ attachment \
             --pk=attachment_id \
-            --drop files
+            --drop files \
+            --drop file_headers
 	sqlite-utils add-foreign-key $@ filing srNum filer srNum
 	sqlite-utils add-foreign-key $@ attachment rptId filing rptId
 	sqlite-utils add-foreign-key $@ employer rptId filing rptId
