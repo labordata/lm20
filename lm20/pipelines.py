@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import mimetypes
 import os
+import cgi
 
 import dateutil.parser
 
@@ -146,30 +147,27 @@ class HeaderMimetypePipeline(FilesPipeline):
             headers = response.headers
 
         media_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
-        media_ext = os.path.splitext(request.url)[1]
+
+        content_disposition = headers.get('Content-Disposition').decode()
+        _, params = cgi.parse_header(content_disposition)
+        filename = params['filename']
+        
+        media_ext = os.path.splitext(filename)[1]
         #Handles empty and wild extensions by trying to guess the
         #mime type then extension or default to empty string otherwise
         if media_ext not in mimetypes.types_map:
-           media_ext = ''
-           media_type = mimetypes.guess_type(request.url)[0]
-           if media_type:
-               media_ext = mimetypes.guess_extension(media_type)
-           else:
-               media_ext = mimetypes.guess_extension(headers.get('Content-Type').decode("utf").split(';')[0])
-               if media_ext is None:
-                   media_ext = ''
+            media_ext = ''
+            media_type = mimetypes.guess_type(filename)[0]
+            if media_type:
+                media_ext = mimetypes.guess_extension(media_type)
+            else:
+                media_ext = mimetypes.guess_extension(headers.get('Content-Type').decode("utf").split(';')[0])
 
-           if media_ext == '':
-               breakpoint()
-
-            
+        if media_ext is None:
+            media_ext = ''
+                
+        if media_ext in {'', '.bin'}:
+            media_ext = '.pdf'
 
         return f'full/{media_guid}{media_ext}'
 
-    def parse_header(response, request, info, items):
-        breakpoint()
-
-        return self.file_path(request,
-                              response=response,
-                              info=info,
-                              item=item)
