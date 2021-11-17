@@ -9,7 +9,7 @@ class LM20(Spider):
         'ITEM_PIPELINES': {
             'lm20.pipelines.TimestampToDatetime': 1,
             'lm20.pipelines.ReportLink': 2,
-            'scrapy.pipelines.files.FilesPipeline': 3
+            'lm20.pipelines.HeaderMimetypePipeline': 3
         }
     }
 

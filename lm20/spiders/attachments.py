@@ -7,7 +7,7 @@ class Attachments(Spider):
 
     custom_settings = {
         'ITEM_PIPELINES': {
-            'scrapy.pipelines.files.FilesPipeline': 3
+            'lm20.pipelines.HeaderMimetypePipeline': 3
         }
     }
 

@@ -1,9 +1,14 @@
 import datetime
+import hashlib
+import mimetypes
+import os
 
 import dateutil.parser
 
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
+from scrapy.pipelines.files import FilesPipeline
+from scrapy.utils.python import to_bytes
 
 
 class TimestampToDatetime:
@@ -106,3 +111,23 @@ class StandardDate:
             adapter['termDate'] = dateutil.parser.parse(time_str).date()
 
         return item
+
+class HeaderMimetypePipeline(FilesPipeline):
+
+    def file_path(self, request, response=None, info=None, *, item=None):
+        if response is None:
+            return None
+
+        media_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
+        media_ext = os.path.splitext(request.url)[1]
+        #Handles empty and wild extensions by trying to guess the
+        #mime type then extension or default to empty string otherwise
+        if media_ext not in mimetypes.types_map:
+           media_ext = ''
+           media_type = mimetypes.guess_type(request.url)[0]
+           if media_type:
+               media_ext = mimetypes.guess_extension(media_type)
+           else:
+               media_ext = mimetypes.guess_extension(response.headers.get('Content-Type').decode("utf"))
+
+        return f'full/{media_guid}{media_ext}'
