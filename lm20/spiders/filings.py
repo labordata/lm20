@@ -94,12 +94,54 @@ class LM20(Spider):
 
     def parse_lm_21_html_report(self, response, item):
 
-        file_number = response.xpath("//span[@class='i-label' and text()='1. File Number: C-']/following-sibling::span[@class='i-value']/text()").get()
-        period_begin = response.xpath("//span[@class='i-label' and text()=' From: ']/following-sibling::span[@class='i-value']/text()").get()
-        period_through = response.xpath("//span[@class='i-label' and text()=' Through: ']/following-sibling::span[@class='i-value']/text()").get()
 
-        person_filing_three = response.xpath("//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='3. Name and mailing address (including Zip Code):']]/following-sibling::div[@class='i-sectionbody']")
-        person_filing_name = person_filing_three.xpath(".//span[@class='i-label' and text()='Name:']/following-sibling::span[@class='i-value']/text()").get()
+        form_data = LM21Report.parse(response)
 
+class LM21Report:
+
+    @staticmethod
+    def parse(response):
+
+        form_dict = dict(
+            file_number=self._get_i_value(response, '1. File Number: C-')
+            period_begin=self._get_i_value(response, ' From: ')
+            period_through=self._get_i_value(response, ' Through: ')
+        )
+
+        form_dict.update(self._section_three(response))
+        
+
+    @staticmethod
+    def _section_three(response):
+        section = self._section(
+            response,
+            '3. Name and mailing address (including Zip Code):'
+        )
+        fields = ('Name:',
+                  'Title:',
+                  'Organization:',
+                  'P.O. Box., Bldg., Room No., if any:',
+                  'Street:',
+                  'City:',
+                  'ZIP code:')
+
+        section_dict = {}
+        for field in fields:
+            section_dict[field.strip(': ')] = self._get_i_value(
+                section,
+                field).strip()
+        return section_dict
+                  
+
+    @staticmethod
+    def _section(response, label_text):
+
+        xpath = f"//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='{label_text}']]/following-sibling::div[@class='i-sectionbody']"
+        return response.xpath(xpath)
+
+    @staticmethod
+    def _get_i_value(tree, label_text):
+        xpath = f".//span[@class='i-label' and text()='{label_text}']/following-sibling::span[@class='i-value']/text()"
+        return tree.xpath(xpath).get()
         
         
