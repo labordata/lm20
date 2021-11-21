@@ -27,7 +27,6 @@ class LM20(Spider):
         @cb_kwargs {"page": 0}
         @returns requests 501 501
         """
-        
         filers = response.json()['filerList']
         for filer in filers:
             yield FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet",
@@ -71,6 +70,7 @@ class LM20(Spider):
             
             if item['formLink'] == 'LM20Form':
                 callback = self.parse_lm20_html_report
+                return item
             elif item['formLink'] == 'LM21Form':
                 callback = self.parse_lm21_html_report
             else:
@@ -88,60 +88,103 @@ class LM20(Spider):
             return item
         
 
-    def parse_lm_20_html_report(self, response, item):
+    def parse_lm20_html_report(self, response, item):
 
-        breakpoint()
+        form_data = LM20Report.parse(response)
 
-    def parse_lm_21_html_report(self, response, item):
 
+        return item
+
+
+    def parse_lm21_html_report(self, response, item):
 
         form_data = LM21Report.parse(response)
 
+        return form_data
+
 class LM21Report:
 
-    @staticmethod
-    def parse(response):
+    @classmethod
+    def parse(cls, response):
 
         form_dict = dict(
-            file_number=self._get_i_value(response, '1. File Number: C-')
-            period_begin=self._get_i_value(response, ' From: ')
-            period_through=self._get_i_value(response, ' Through: ')
+            file_number=cls._get_i_value(response, '1. File Number: C-'),
+            period_begin=cls._get_i_value(response, ' From: '),
+            period_through=cls._get_i_value(response, ' Through: '),
         )
 
-        form_dict.update(self._section_three(response))
+        breakpoint()
+
+        form_dict['person filing'] = {}
+        form_dict['person filing']['name and mailing address'] = cls._section_three(response)
+        form_dict['person filing']['any other name or address necessary to verify report'] = cls._section_four(response)
         
 
-    @staticmethod
-    def _section_three(response):
-        section = self._section(
+        breakpoint()
+
+
+    @classmethod
+    def _section_three(cls, response):
+        return cls._parse_section(
             response,
-            '3. Name and mailing address (including Zip Code):'
+            section_label='3. Name and mailing address (including Zip Code):',
+            field_labels=('Name:',
+                          'Title:',
+                          'Organization:',
+                          'P.O. Box., Bldg., Room No., if any:',
+                          'Street:',
+                          'City:',
+                          'ZIP code:')
+            )
+
+    @classmethod
+    def _section_four(cls, response):
+        return cls._parse_section(
+            response,
+            section_label='''4. Any other address where records necessary to
+													verify this report are kept:''',
+            field_labels=('Name:',
+                          'Title:',
+                          'Organization:',
+                          'P.O. Box., Bldg., Room No., if any:',
+                          'Street:',
+                          'City:',
+                          'ZIP code:')
+            )
+    
+            
+    @classmethod
+    def _parse_section(cls, response, section_label, field_labels):
+        section = cls._section(
+            response,
+            section_label
         )
-        fields = ('Name:',
-                  'Title:',
-                  'Organization:',
-                  'P.O. Box., Bldg., Room No., if any:',
-                  'Street:',
-                  'City:',
-                  'ZIP code:')
 
         section_dict = {}
-        for field in fields:
-            section_dict[field.strip(': ')] = self._get_i_value(
+        for field in field_labels:
+            section_dict[field.strip(': ')] = cls._get_i_value(
                 section,
                 field).strip()
         return section_dict
-                  
 
-    @staticmethod
-    def _section(response, label_text):
+        
+    
+    @classmethod
+    def _section(cls, response, label_text):
 
         xpath = f"//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='{label_text}']]/following-sibling::div[@class='i-sectionbody']"
         return response.xpath(xpath)
 
-    @staticmethod
-    def _get_i_value(tree, label_text):
-        xpath = f".//span[@class='i-label' and text()='{label_text}']/following-sibling::span[@class='i-value']/text()"
-        return tree.xpath(xpath).get()
+    @classmethod
+    def _get_i_value(cls, tree, label_text):
+
+        i_value_xpath = f".//span[@class='i-label' and text()='{label_text}']/following-sibling::span[@class='i-value'][1]/text()"
+        result = tree.xpath(i_value_xpath)
+
+        if not result:
+            following_text_xpath = f".//span[@class='i-label' and text()='{label_text}']/following-sibling::text()[1]"
+            result = tree.xpath(following_text_xpath)
+
+        return result.get(default='')
         
         
