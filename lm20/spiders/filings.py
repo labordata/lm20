@@ -67,25 +67,26 @@ class LM20(Spider):
         content_type, _ = cgi.parse_header(response.headers.get('Content-Type').decode())
         if content_type == 'text/html':
 
-            
+            callback = None
             if item['formLink'] == 'LM20Form':
-                callback = self.parse_lm20_html_report
-                return item
+                #callback = self.parse_lm20_html_report
+                yield item
             elif item['formLink'] == 'LM21Form':
                 callback = self.parse_lm21_html_report
             else:
                 raise ValueError('Invalid formLink', item['formLink'])
 
-            yield Request(response.request.url,
-                          cb_kwargs={'item': item},
-                          callback=callback)
+            if callback:
+                yield Request(response.request.url,
+                              cb_kwargs={'item': item},
+                              callback=callback)
                                 
 
         else:
             item['file_urls'].append(response.request.url)
             item['file_headers'][response.request.url] = response.headers
             
-            return item
+            yield item
         
 
     def parse_lm20_html_report(self, response, item):
@@ -113,14 +114,67 @@ class LM21Report:
             period_through=cls._get_i_value(response, ' Through: '),
         )
 
-        breakpoint()
-
         form_dict['person filing'] = {}
         form_dict['person filing']['name and mailing address'] = cls._section_three(response)
         form_dict['person filing']['any other name or address necessary to verify report'] = cls._section_four(response)
+        form_dict['signatures'] = cls._signatures(response)
+        form_dict['receipts'] = cls._statement_of_receipts(response)
         
 
         breakpoint()
+
+    @classmethod
+    def _statement_of_receipts(cls, response):
+
+        results = []
+        section_xpath = "//div[@class='myTable' and descendant::span[@class='i-label' and text()='Statement of Receipts']]"
+        section = response.xpath(section_xpath)
+
+        receipts = section.xpath(".//div[@class='activityTable']")
+
+        for receipt in receipts:
+            parsed_receipts = {}
+            for field in ('Employer:',
+                          'Trade Name:',
+                          'Name:',
+                          'Title:',
+                          'Mailing Address:',
+                          'P.O. Box., Bldg., Room No., if any:',
+                          'Street:',
+                          'City:',
+                          'State:',
+                          'ZIP Code:',
+                          'Termination Date:',
+                          'Amount:',
+                          '\xa0 \xa0 \xa0 Non-Cash Payment:',
+                          '\xa0\xa0\xa0 Type of Payment:'):
+                clean_field = field.replace('\xa0', '').strip(' :')
+                parsed_receipts[clean_field] = cls._get_i_value(receipt,
+                                                                field)
+            results.append(parsed_receipts)
+                          
+        return results
+        
+
+    @classmethod
+    def _signatures(cls, response):
+
+        result = {17: {}, 18: {}}
+        for signature_number in result:
+            section = cls._signature_section(response, signature_number)
+            for field in ('SIGNED:',
+                          'Title:',
+                          'Date:',
+                          'Telephone:'):
+                result[signature_number][field] = cls._get_i_value(section,
+                                                                   field)
+
+        return result
+
+    @classmethod
+    def _signature_section(cls, response, signature_number):
+
+        return response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
 
 
     @classmethod
@@ -178,13 +232,18 @@ class LM21Report:
     @classmethod
     def _get_i_value(cls, tree, label_text):
 
-        i_value_xpath = f".//span[@class='i-label' and text()='{label_text}']/following-sibling::span[@class='i-value'][1]/text()"
+        i_value_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::span[@class='i-value'][1]/text()"
         result = tree.xpath(i_value_xpath)
 
         if not result:
-            following_text_xpath = f".//span[@class='i-label' and text()='{label_text}']/following-sibling::text()[1]"
+            i_checkbox_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::span[@class='i-xcheckbox'][1]/text()"
+            result = tree.xpath(i_checkbox_xpath)
+
+        if not result:
+            following_text_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::text()[1]"
             result = tree.xpath(following_text_xpath)
 
-        return result.get(default='')
+            
+        return result.get(default='').strip()
         
         
