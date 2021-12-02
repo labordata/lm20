@@ -119,10 +119,41 @@ class LM21Report:
         form_dict['person filing']['any other name or address necessary to verify report'] = cls._section_four(response)
         form_dict['signatures'] = cls._signatures(response)
         form_dict['receipts'] = cls._statement_of_receipts(response)
-        
+        form_dict['disbursements'] = cls._statement_of_disbursements(response)
 
+        
         breakpoint()
 
+    @classmethod
+    def _statement_of_disbursements(cls, response):
+
+        results = {}
+        
+        tables_xpath = ".//div[text()='Disbursements to Officers and Employees: ']/parent::div/parent::div[@class='row']/following-sibling::div[@class='row']/table[@class='addTable']"
+
+        tables = response.xpath(tables_xpath)
+
+        individual_disbursements = []
+        fields = ('name', 'salary', 'expense', 'total')
+        for row in tables[0].xpath('./tr'):
+            values = row.xpath('./th//text()').getall()
+            individual_disbursements.append(dict(zip(fields, values)))
+
+        results['individual disbursements'] = individual_disbursements
+
+        for row in tables[1].xpath('./tr'):
+            index, field_name, *rest = row.xpath('./th//text()').getall()
+
+            if rest:
+                value, = rest
+            else:
+                value = ''
+
+            results[field_name.strip(' :')] = value
+
+        return results
+        
+        
     @classmethod
     def _statement_of_receipts(cls, response):
 
