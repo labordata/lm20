@@ -65,6 +65,7 @@ class LM20(Spider):
         item['file_headers'] = {}
 
         content_type, _ = cgi.parse_header(response.headers.get('Content-Type').decode())
+
         if content_type == 'text/html':
 
             callback = None
@@ -90,7 +91,6 @@ class LM20(Spider):
         
 
     def parse_lm20_html_report(self, response, item):
-
         form_data = LM20Report.parse(response)
 
 
@@ -99,9 +99,25 @@ class LM20(Spider):
 
     def parse_lm21_html_report(self, response, item):
 
-        form_data = LM21Report.parse(response)
+        # baffling, sometimes when you request some resources
+        # it returns html and sometime it returns a pdf
+        # if we got here, then ther server told us at least once
+        # that this is html, so keep retrying until we get html
+        content_type, _ = cgi.parse_header(response.headers.get('Content-Type').decode())
 
-        return form_data
+        if content_type == 'text/html':
+
+            form_data = LM21Report.parse(response)
+
+            item['detailed form data'] = form_data
+
+            yield item
+
+        else:
+            yield Request(response.request.url,
+                          cb_kwargs={'item': item},
+                          callback=self.parse_lm21_html_report)
+
 
 class LM21Report:
 
@@ -114,15 +130,46 @@ class LM21Report:
             period_through=cls._get_i_value(response, ' Through: '),
         )
 
-        form_dict['person filing'] = {}
-        form_dict['person filing']['name and mailing address'] = cls._section_three(response)
-        form_dict['person filing']['any other name or address necessary to verify report'] = cls._section_four(response)
+        form_dict['person_filing'] = {}
+        form_dict['person_filing']['name and mailing address'] = cls._section_three(response)
+        form_dict['person_filing']['any other name or address necessary to verify report'] = cls._section_four(response)
         form_dict['signatures'] = cls._signatures(response)
         form_dict['receipts'] = cls._statement_of_receipts(response)
         form_dict['disbursements'] = cls._statement_of_disbursements(response)
+        form_dict['schedule_disbursements'] = cls._schedule_of_disbursements(response)
+        form_dict['total_disbursements'] = cls._get_i_value(response, 'TOTAL DISBURSEMENTS FOR ALL REPORTABLE ACTIVITY:')
 
-        
-        breakpoint()
+        return form_dict
+
+    @classmethod
+    def _schedule_of_disbursements(cls, response):
+
+        results = []
+        section_xpath = "//div[@class='myTable' and descendant::span[@class='i-label' and text()='Schedule of Disbursements for Reportable Activity ']]"
+        section = response.xpath(section_xpath)
+
+        employers = section.xpath(".//div[@class='activityTable']")
+
+        for employer in employers:
+            parsed = {}
+            for field in ('15.a. Employer Name:',
+                          '15.b. Trade Name, If any:',
+                          'Name:',
+                          'Title:',
+                          'Organization:',
+                          'P.O. Box., Bldg., Room No., if any:',
+                          'Street:',
+                          'City:',
+                          'ZIP code:',
+                          '15.d.Amount:',
+                          '15.e.Purpose:'):
+                clean_field = field.replace('\xa0', '').strip(' :')
+                parsed[clean_field] = cls._get_i_value(employer,
+                                                       field)
+
+            results.append(parsed)
+
+        return results
 
     @classmethod
     def _statement_of_disbursements(cls, response):
@@ -205,7 +252,9 @@ class LM21Report:
     @classmethod
     def _signature_section(cls, response, signature_number):
 
-        return response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
+        result = response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
+
+        return result
 
 
     @classmethod
@@ -269,6 +318,10 @@ class LM21Report:
         if not result:
             i_checkbox_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::span[@class='i-xcheckbox'][1]/text()"
             result = tree.xpath(i_checkbox_xpath)
+
+        if not result:
+            nested_i_value_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::span[1]/span[@class='i-value']/text()"
+            result = tree.xpath(nested_i_value_xpath)
 
         if not result:
             following_text_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::text()[1]"
