@@ -31,7 +31,7 @@ class Employers(Spider):
         filers = response.json()['filerList']
         for filer in filers:
             yield FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet",
-                              formdata={'srFilerId': filer['srFilerId']},
+                              formdata={'srNum': 'C-' + str(filer['srNum'])},
                               callback=self.parse_filings)
         if len(filers) == 500:
             page += 1
