@@ -51,42 +51,45 @@ class LM20(Spider):
             del filing['fileName']
             del filing['fileDesc']
 
+            filing['detailed form data'] = None
+            item['file_urls'] = []
+            item['file_headers'] = {}
+
             report_url = 'https://olmsapps.dol.gov/query/orgReport.do?rptId={rptId}&rptForm={formLink}'.format(**filing)
 
-            yield Request(report_url,
-                          method='HEAD',
-                          cb_kwargs={'item': filing},
-                          callback=self.report_header)
+            # These three conditions seem sufficient to identify that
+            # a filing was submitted electronically and if we
+            # request the filing form, we'll get back a web page
+            # (though we might have to ask more than once)
+            electronic_submission = all((filing['paperOrElect'] == 'E',
+                                         filing['receiveDate'],
+                                         filing['rptId'] > 183135))
+
+            if electronic_submission:
+                callback = None
+                if filing['formLink'] == 'LM20Form':
+                    #callback = self.parse_lm20_html_report
+                    continue
+                elif filing['formLink'] == 'LM21Form':
+                    callback = self.parse_lm21_html_report
+                else:
+                    raise ValueError('Invalid formLink', filing['formLink'])
+
+                yield Request(report_url,
+                              cb_kwargs={'item': filing},
+                              callback=callback)
+            else:
+                yield Request(report_url,
+                              method='HEAD',
+                              cb_kwargs={'item': filing},
+                              callback=self.report_header)
 
     def report_header(self, response, item):
 
-        item['file_urls'] = []
-        item['file_headers'] = {}
+        item['file_urls'] = [response.request.url]
+        item['file_headers'] = {response.request.url: response.headers}
 
-        content_type, _ = cgi.parse_header(response.headers.get('Content-Type').decode())
-
-        if content_type == 'text/html':
-
-            callback = None
-            if item['formLink'] == 'LM20Form':
-                #callback = self.parse_lm20_html_report
-                yield item
-            elif item['formLink'] == 'LM21Form':
-                callback = self.parse_lm21_html_report
-            else:
-                raise ValueError('Invalid formLink', item['formLink'])
-
-            if callback:
-                yield Request(response.request.url,
-                              cb_kwargs={'item': item},
-                              callback=callback)
-                                
-
-        else:
-            item['file_urls'].append(response.request.url)
-            item['file_headers'][response.request.url] = response.headers
-            
-            yield item
+        yield item
         
 
     def parse_lm20_html_report(self, response, item):
@@ -100,8 +103,6 @@ class LM20(Spider):
 
         # baffling, sometimes when you request some resources
         # it returns html and sometime it returns a pdf
-        # if we got here, then ther server told us at least once
-        # that this is html, so keep retrying until we get html
         content_type, _ = cgi.parse_header(response.headers.get('Content-Type').decode())
 
         if content_type == 'text/html':
@@ -115,7 +116,8 @@ class LM20(Spider):
         else:
             yield Request(response.request.url,
                           cb_kwargs={'item': item},
-                          callback=self.parse_lm21_html_report)
+                          callback=self.parse_lm21_html_report,
+                          dont_filter=True)
 
 
 class LM21Report:
