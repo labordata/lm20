@@ -30,7 +30,7 @@ class LM20(Spider):
         filers = response.json()['filerList']
         for filer in filers:
             yield FormRequest("https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet",
-                              formdata={'srFilerId': filer['srFilerId']},
+                              formdata={'srNum': 'C-' + str(filer['srNum'])},
                               callback=self.parse_filings)
         if len(filers) == 500:
             page += 1
@@ -43,10 +43,9 @@ class LM20(Spider):
         """
         @url https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet
         @filings_form
-        @returns items 55
+        @returns items 2
         @scrapes amended
         """
-
         for filing in response.json()['detail']:
             del filing['attachmentId']
             del filing['fileName']

@@ -16,7 +16,7 @@ class FilingsFormContract(Contract):
     request_cls = FormRequest
 
     def adjust_request_args(self, args):
-        args['formdata'] = {'srFilerId': '100181,105304'}
+        args['formdata'] = {'srNum': 'C-297'}
         return args
 
 
