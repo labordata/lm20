@@ -107,8 +107,9 @@ class LM20(Spider):
 
         else:
             yield Request(response.request.url,
-                          cb_kwargs={'item': item},
-                          callback=self.parse_lm21_html_report,
+                          cb_kwargs={'item': item,
+                                     'report': report},
+                          callback=self.parse_html_report,
                           dont_filter=True)
 
 
@@ -354,10 +355,11 @@ class LM20Report:
 
         form_dict['signatures'] = cls._signatures(response)
 
+        form_dict['direct_or_indirect'] = cls._direct_or_indirect(response)
 
-        breakpoint()
+        form_dict['terms_and_conditions'] = cls._terms_and_conditions(response)
 
-
+        form_dict['specific_activities'] = cls._specific_activities(response)
 
         return form_dict
 
@@ -442,3 +444,88 @@ class LM20Report:
         result = response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
 
         return result
+
+    @classmethod
+    def _direct_or_indirect(cls, response):
+
+        label_text = '''Check the appropriate box(es) to indicate
+														whether an object
+														of the activities undertaken is directly
+														or
+														indirectly:'''
+
+        section = response.xpath(f"//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='{label_text}']]/following-sibling::div[@class='activityTable']")
+
+        direct_text = '''To persuade employees to exercise or not to
+													exercise, or persuade employees as to the manner of
+													exercising, the right to organize and bargain collectively
+													through representatives of their own choosing.'''
+        indirect_text = '''To supply an employer with information
+													concerning the activities of employees or a labor
+													organization in connection with a labor dispute involving
+													such employer, except information for use solely in
+													conjunction with an administrative or arbitral proceeding
+													or
+													a criminal or civil judicial proceeding.'''
+
+        direct = section.xpath(f".//div[@class='row' and descendant::div[text()='{direct_text}']]//span[@class='i-xcheckbox']/text()")
+
+        indirect = section.xpath(f".//div[@class='row' and descendant::div[text()='{indirect_text}']]//span[@class='i-xcheckbox']/text()")
+
+        return {'direct': direct.get(default=''),
+                'indirect': indirect.get(default='')}
+
+    @classmethod
+    def _terms_and_conditions(cls, response):
+        section = response.xpath("//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='Terms and conditions.']]/following-sibling::div[@class='activityTable']")
+
+        written_agreement = section.xpath(".//div[@class='row' and descendant::span[text()='Written Agreement/Arrangement']]//span[@class='i-xcheckbox']/text()")
+
+        notes = section.xpath(".//div[@class='row'][2]/div/text()")
+
+        return {'written_agreement': written_agreement.get(default=''),
+                'notes': notes.get(default='')}
+
+    @classmethod
+    def _specific_activities(cls, response):
+
+        section = response.xpath("//div[@class='myTable' and descendant::span[@class='i-label' and text()='Specific Activities to be performed']]")
+
+        
+        activities = section.xpath(".//div[@class='row' and descendant::span[@class='i-label' and text()='Activity']]")
+
+        for i, activity in enumerate(activities, 1):
+            subsection = activity.xpath(f"./following-sibling::div[@class='row' and count(preceding-sibling::div[@class='row' and descendant::span[@class='i-label' and text()='Activity']])={i}]")
+
+            nature_of_activity: cls._get_i_value(subsection, 'a. Nature of activity:')
+
+            period_of_performance = subsection.xpath('''.//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='11.b.Period during which activities
+														performed:']]/following-sibling::div/span[@class='i-value']/text()''').get(default='')
+
+            extent_of_performance = subsection.xpath(".//span[@class='i-label' and text()='11.c. Extent of performance:']/following-sibling::div[@class='i-sectionbody']/div[@class='i-value']/text()").get()
+
+            performers = subsection.xpath("./div[descendant::div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='11.d.']]]")
+
+            performer_list = []
+            for performer in performers:
+                performer_dict = {}
+                performer_section = performer.xpath("./div[@class='row']")
+
+                fields = ('\xa0 Name:',
+                          '\xa0 \xa0 \xa0 \xa0 \xa0Organization:',
+                          ' \xa0 P.O. Box, Bldg., Room No., If any:',
+                          'Street:',
+                          'City:',
+                          'State:',
+                          'Zip:')
+
+                for field in fields:
+                    clean_field = field.replace('\xa0', '').strip(' :')
+                    performer_dict[clean_field] = cls._get_i_value(performer_section,
+                                                                   field)
+                    
+                performer_list.append(performer_dict)
+                
+            breakpoint()
+
+                              
