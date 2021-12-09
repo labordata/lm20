@@ -52,8 +52,8 @@ class LM20(Spider):
             del filing['fileDesc']
 
             filing['detailed form data'] = None
-            item['file_urls'] = []
-            item['file_headers'] = {}
+            filing['file_urls'] = []
+            filing['file_headers'] = {}
 
             report_url = 'https://olmsapps.dol.gov/query/orgReport.do?rptId={rptId}&rptForm={formLink}'.format(**filing)
 
@@ -87,7 +87,7 @@ class LM20(Spider):
     def report_header(self, response, item):
 
         item['file_urls'] = [response.request.url]
-        item['file_headers'] = {response.request.url: response.headers}
+        item['file_headers'] = {response.request.url: response.headers.to_unicode_dict()}
 
         yield item
         
