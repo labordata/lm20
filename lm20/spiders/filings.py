@@ -66,18 +66,18 @@ class LM20(Spider):
                                          filing['rptId'] > 183135))
 
             if electronic_submission:
-                callback = None
+                report = None
                 if filing['formLink'] == 'LM20Form':
-                    #callback = self.parse_lm20_html_report
-                    continue
+                    report = LM20Report
                 elif filing['formLink'] == 'LM21Form':
-                    callback = self.parse_lm21_html_report
+                    report = LM21Report
                 else:
                     raise ValueError('Invalid formLink', filing['formLink'])
 
                 yield Request(report_url,
-                              cb_kwargs={'item': filing},
-                              callback=callback)
+                              cb_kwargs={'item': filing,
+                                         'report': report},
+                              callback=self.parse_html_report)
             else:
                 yield Request(report_url,
                               method='HEAD',
@@ -91,15 +91,7 @@ class LM20(Spider):
 
         yield item
         
-
-    def parse_lm20_html_report(self, response, item):
-        form_data = LM20Report.parse(response)
-
-
-        return item
-
-
-    def parse_lm21_html_report(self, response, item):
+    def parse_html_report(self, response, item, report):
 
         # baffling, sometimes when you request some resources
         # it returns html and sometime it returns a pdf
@@ -107,7 +99,7 @@ class LM20(Spider):
 
         if content_type == 'text/html':
 
-            form_data = LM21Report.parse(response)
+            form_data = report.parse(response)
 
             item['detailed form data'] = form_data
 
@@ -269,6 +261,7 @@ class LM21Report:
                           'P.O. Box., Bldg., Room No., if any:',
                           'Street:',
                           'City:',
+                          'State:',
                           'ZIP code:')
             )
 
@@ -284,6 +277,7 @@ class LM21Report:
                           'P.O. Box., Bldg., Room No., if any:',
                           'Street:',
                           'City:',
+                          'State:',
                           'ZIP code:')
             )
     
@@ -332,3 +326,119 @@ class LM21Report:
         return result.get(default='').strip()
         
         
+class LM20Report:
+
+    @classmethod
+    def parse(cls, response):
+
+        form_dict = dict(
+            file_number=cls._get_i_value(response, '1.a. File Number: C-'),
+            amended=cls._get_i_value(response, 'Amended:'),
+        )
+
+        form_dict['person_filing'] = {}
+        form_dict['person_filing']['name and mailing address'] =\
+            cls._contact_block(response,
+                               'Name and mailing address (including Zip Code):')
+        form_dict['person_filing']['any other name or address necessary to verify report'] =\
+            cls._contact_block(response,
+                               '''Other address where records necessary to
+													verify this report are kept:''')
+        form_dict['employer'] =\
+            cls._contact_block(response,
+                               "Full name and address of employer  with whom made (include ZIP Code):")
+
+        form_dict['employer']['Date entered into'] =\
+            cls._get_i_value(response,
+                             'Date entered into')
+
+        form_dict['signatures'] = cls._signatures(response)
+
+
+        breakpoint()
+
+
+
+        return form_dict
+
+    @classmethod
+    def _contact_block(cls, response, section_label):
+        return cls._parse_section(
+            response,
+            section_label=section_label,
+            field_labels=('Name:',
+                          'Title:',
+                          'Organization:',
+                          'P.O. Box., Bldg., Room No., if any:',
+                          'Street:',
+                          'City:',
+                          'State:',
+                          'ZIP code:')
+            )
+        
+            
+    @classmethod
+    def _parse_section(cls, response, section_label, field_labels):
+        section = cls._section(
+            response,
+            section_label
+        )
+
+        section_dict = {}
+        for field in field_labels:
+            section_dict[field.strip(': ')] = cls._get_i_value(
+                section,
+                field).strip()
+        return section_dict
+
+        
+    
+    @classmethod
+    def _section(cls, response, label_text):
+
+        xpath = f"//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='{label_text}']]/following-sibling::div[@class='i-sectionbody']"
+        return response.xpath(xpath)
+
+    @classmethod
+    def _get_i_value(cls, tree, label_text):
+
+        i_value_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::span[@class='i-value'][1]/text()"
+        result = tree.xpath(i_value_xpath)
+
+        if not result:
+            i_checkbox_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::span[@class='i-xcheckbox'][1]/text()"
+            result = tree.xpath(i_checkbox_xpath)
+
+        if not result:
+            nested_i_value_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::span[1]/span[@class='i-value']/text()"
+            result = tree.xpath(nested_i_value_xpath)
+
+        if not result:
+            following_text_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::text()[1]"
+            result = tree.xpath(following_text_xpath)
+
+            
+        return result.get(default='').strip()
+        
+        
+    @classmethod
+    def _signatures(cls, response):
+
+        result = {13: {}, 14: {}}
+        for signature_number in result:
+            section = cls._signature_section(response, signature_number)
+            for field in ('SIGNED:',
+                          'Title:',
+                          'Date:',
+                          'Telephone Number:'):
+                result[signature_number][field] = cls._get_i_value(section,
+                                                                   field)
+
+        return result
+
+    @classmethod
+    def _signature_section(cls, response, signature_number):
+
+        result = response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
+
+        return result
