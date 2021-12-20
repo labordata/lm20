@@ -345,6 +345,9 @@ class LM20Report:
             cls._contact_block(response,
                                '''Other address where records necessary to
 													verify this report are kept:''')
+
+        form_dict['type of person'] = cls._type_of_person(response)
+
         form_dict['employer'] =\
             cls._contact_block(response,
                                "Full name and address of employer  with whom made (include ZIP Code):")
@@ -377,7 +380,30 @@ class LM20Report:
                           'State:',
                           'ZIP code:')
             )
-        
+
+    @classmethod
+    def _type_of_person(cls, response):
+
+        person_type = {'Individual \xa0 \xa0 \xa0 b.': 'Individual',
+                       'Partnership': 'Partnership',
+                       'Corporation C d.': 'Corporation C',
+                       'Other': 'Other'}
+
+        section = cls._section(response, 'Type of person')
+
+        checkboxes = section.xpath("./span[@class='i-xcheckbox' or @class='i-nocheckbox']")
+        checked_value = None
+
+        for box in checkboxes:
+            value = box.xpath('./text()').get(default='').strip()
+            label = person_type[box.xpath('./following-sibling::text()[1]').get().strip()]
+
+            if value == 'X':
+                assert checked_value is None
+                checked_value = label
+
+        assert checked_value is not None
+        return checked_value
             
     @classmethod
     def _parse_section(cls, response, section_label, field_labels):
@@ -494,15 +520,17 @@ class LM20Report:
         
         activities = section.xpath(".//div[@class='row' and descendant::span[@class='i-label' and text()='Activity']]")
 
+        activities_list = []
+
         for i, activity in enumerate(activities, 1):
             subsection = activity.xpath(f"./following-sibling::div[@class='row' and count(preceding-sibling::div[@class='row' and descendant::span[@class='i-label' and text()='Activity']])={i}]")
 
-            nature_of_activity: cls._get_i_value(subsection, 'a. Nature of activity:')
+            nature_of_activity = cls._get_i_value(subsection, 'a. Nature of activity:')
 
             period_of_performance = subsection.xpath('''.//div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='11.b.Period during which activities
 														performed:']]/following-sibling::div/span[@class='i-value']/text()''').get(default='')
 
-            extent_of_performance = subsection.xpath(".//span[@class='i-label' and text()='11.c. Extent of performance:']/following-sibling::div[@class='i-sectionbody']/div[@class='i-value']/text()").get()
+            extent_of_performance = subsection.xpath(".//span[@class='i-label' and text()='11.c. Extent of performance:']/following-sibling::div[@class='i-sectionbody']/div[@class='i-value']/text()").get(default='')
 
             performers = subsection.xpath("./div[descendant::div[@class='i-sectionNumberTable' and descendant::span[@class='i-label' and text()='11.d.']]]")
 
@@ -525,7 +553,19 @@ class LM20Report:
                                                                    field)
                     
                 performer_list.append(performer_dict)
-                
-            breakpoint()
+
+            subject_employees = subsection.xpath(".//div[@class='row' and descendant::span[@class='i-label' and text()=' 12.a. Identify subject groups of employees:']]/following-sibling::div[@class='i-sectionbody']/span[@class='i-value']/text()").get(default='')
+
+            subject_labor_orgs = subsection.xpath(".//div[@class='row' and descendant::span[@class='i-label' and text()=' 12.b. Identify subject labor organizations:']]/following-sibling::div//span[@class='i-value']/text()").get(default='')
+
+            activities_list.append(
+                {'nature of activity': nature_of_activity,
+                 'period of performance': period_of_performance,
+                 'extent of performance': extent_of_performance,
+                 'performers': performer_list,
+                 'subject employees': subject_employees,
+                 'subject labor orgs': subject_labor_orgs})
+
+        return activities_list
 
                               
