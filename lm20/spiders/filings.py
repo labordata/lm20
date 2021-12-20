@@ -97,7 +97,7 @@ class LM20(Spider):
         # it returns html and sometime it returns a pdf
         content_type, _ = cgi.parse_header(response.headers.get('Content-Type').decode())
 
-        if content_type == 'text/html':
+        if content_type == 'text/html' and b'Signature' in response.body:
 
             form_data = report.parse(response)
 
@@ -346,6 +346,8 @@ class LM20Report:
                                '''Other address where records necessary to
 													verify this report are kept:''')
 
+        form_dict['date fiscal year ends'] = ' '.join(response.xpath("//span[@class='i-label' and text()='Date fiscal year ends:']/following-sibling::span//text()").getall())
+
         form_dict['type of person'] = cls._type_of_person(response)
 
         form_dict['employer'] =\
@@ -467,7 +469,10 @@ class LM20Report:
     @classmethod
     def _signature_section(cls, response, signature_number):
 
-        result = response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
+        try:
+            result = response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
+        except:
+            breakpoint()
 
         return result
 
