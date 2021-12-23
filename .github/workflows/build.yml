@@ -34,7 +34,7 @@ jobs:
       - name: install requirements
         run: |
           pip install -r requirements.txt
-          cpanm https://codeload.github.com/fgregg/json-to-multicsv/zip/refs/heads/master      
+          cpanm https://github.com/fgregg/json-to-multicsv/archive/refs/heads/master.zip
 
       # Runs a single command using the runners shell
       - name: build database
