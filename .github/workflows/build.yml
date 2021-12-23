@@ -47,6 +47,7 @@ jobs:
           zip lm20.db.zip lm20.db
 
       - name: release
+        if: github.ref == 'refs/heads/main'
         uses: WebFreak001/deploy-nightly@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
