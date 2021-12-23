@@ -51,7 +51,7 @@ class LM20(Spider):
             del filing['fileName']
             del filing['fileDesc']
 
-            filing['detailed form data'] = None
+            filing['detailed_form_data'] = None
             filing['file_urls'] = []
             filing['file_headers'] = {}
 
@@ -101,7 +101,7 @@ class LM20(Spider):
 
             form_data = report.parse(response)
 
-            item['detailed form data'] = form_data
+            item['detailed_form_data'] = form_data
 
             yield item
 
@@ -125,8 +125,8 @@ class LM21Report:
         )
 
         form_dict['person_filing'] = {}
-        form_dict['person_filing']['name and mailing address'] = cls._section_three(response)
-        form_dict['person_filing']['any other name or address necessary to verify report'] = cls._section_four(response)
+        form_dict['person_filing']['name_and_mailing_address'] = cls._section_three(response)
+        form_dict['person_filing']['any_other_name_or_address_necessary_to_verify_report'] = cls._section_four(response)
         form_dict['signatures'] = cls._signatures(response)
         form_dict['receipts'] = cls._statement_of_receipts(response)
         form_dict['disbursements'] = cls._statement_of_disbursements(response)
@@ -180,7 +180,7 @@ class LM21Report:
             values = row.xpath('./th//text()').getall()
             individual_disbursements.append(dict(zip(fields, values)))
 
-        results['individual disbursements'] = individual_disbursements
+        results['individual_disbursements'] = individual_disbursements
 
         for row in tables[1].xpath('./tr'):
             index, field_name, *rest = row.xpath('./th//text()').getall()
@@ -190,7 +190,7 @@ class LM21Report:
             else:
                 value = ''
 
-            results[field_name.strip(' :')] = value
+            results[clean_field(field_name)] = value
 
         return results
         
@@ -220,9 +220,8 @@ class LM21Report:
                           'Amount:',
                           '\xa0 \xa0 \xa0 Non-Cash Payment:',
                           '\xa0\xa0\xa0 Type of Payment:'):
-                clean_field = field.replace('\xa0', '').strip(' :')
-                parsed_receipts[clean_field] = cls._get_i_value(receipt,
-                                                                field)
+                parsed_receipts[clean_field(field)] = cls._get_i_value(receipt,
+                                                                       field)
             results.append(parsed_receipts)
                           
         return results
@@ -238,8 +237,8 @@ class LM21Report:
                           'Title:',
                           'Date:',
                           'Telephone:'):
-                result[signature_number][field] = cls._get_i_value(section,
-                                                                   field)
+                result[signature_number][clean_field(field)] = cls._get_i_value(section,
+                                                                          field)
 
         return result
 
@@ -292,7 +291,7 @@ class LM21Report:
 
         section_dict = {}
         for field in field_labels:
-            section_dict[field.strip(': ')] = cls._get_i_value(
+            section_dict[clean_field(field)] = cls._get_i_value(
                 section,
                 field).strip()
         return section_dict
@@ -338,25 +337,25 @@ class LM20Report:
         )
 
         form_dict['person_filing'] = {}
-        form_dict['person_filing']['name and mailing address'] =\
+        form_dict['person_filing']['name_and_mailing_address'] =\
             cls._contact_block(response,
                                'Name and mailing address (including Zip Code):')
-        form_dict['person_filing']['any other name or address necessary to verify report'] =\
+        form_dict['person_filing']['any_other_name_or_address_necessary_to_verify_report'] =\
             cls._contact_block(response,
                                '''Other address where records necessary to
 													verify this report are kept:''')
 
-        form_dict['date fiscal year ends'] = ' '.join(response.xpath("//span[@class='i-label' and text()='Date fiscal year ends:']/following-sibling::span//text()").getall())
+        form_dict['date_fiscal_year_ends'] = ' '.join(response.xpath("//span[@class='i-label' and text()='Date fiscal year ends:']/following-sibling::span//text()").getall())
 
-        form_dict['type of person'] = cls._type_of_person(response)
+        form_dict['type_of_person'] = cls._type_of_person(response)
 
         form_dict['employer'] =\
             cls._contact_block(response,
                                "Full name and address of employer  with whom made (include ZIP Code):")
 
-        form_dict['employer']['Date entered into'] =\
+        form_dict['employer']['date_entered_into'] =\
             cls._get_i_value(response,
-                             'Date entered into')
+                             'Date enteredinto')
 
         form_dict['signatures'] = cls._signatures(response)
 
@@ -416,7 +415,7 @@ class LM20Report:
 
         section_dict = {}
         for field in field_labels:
-            section_dict[field.strip(': ')] = cls._get_i_value(
+            section_dict[clean_field(field)] = cls._get_i_value(
                 section,
                 field).strip()
         return section_dict
@@ -461,18 +460,15 @@ class LM20Report:
                           'Title:',
                           'Date:',
                           'Telephone Number:'):
-                result[signature_number][field] = cls._get_i_value(section,
-                                                                   field)
+                result[signature_number][clean_field(field)] = cls._get_i_value(section,
+                                                                                field)
 
         return result
 
     @classmethod
     def _signature_section(cls, response, signature_number):
 
-        try:
-            result = response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
-        except:
-            breakpoint()
+        result = response.xpath(f"//div[@class='myTable' and descendant::span[@class='i-label' and text()='{signature_number}.']]")[1]
 
         return result
 
@@ -503,8 +499,8 @@ class LM20Report:
 
         indirect = section.xpath(f".//div[@class='row' and descendant::div[text()='{indirect_text}']]//span[@class='i-xcheckbox']/text()")
 
-        return {'direct': direct.get(default=''),
-                'indirect': indirect.get(default='')}
+        return {'direct': direct.get(),
+                'indirect': indirect.get()}
 
     @classmethod
     def _terms_and_conditions(cls, response):
@@ -553,9 +549,8 @@ class LM20Report:
                           'Zip:')
 
                 for field in fields:
-                    clean_field = field.replace('\xa0', '').strip(' :')
-                    performer_dict[clean_field] = cls._get_i_value(performer_section,
-                                                                   field)
+                    performer_dict[clean_field(field)] = cls._get_i_value(performer_section,
+                                                                          field)
                     
                 performer_list.append(performer_dict)
 
@@ -564,13 +559,21 @@ class LM20Report:
             subject_labor_orgs = subsection.xpath(".//div[@class='row' and descendant::span[@class='i-label' and text()=' 12.b. Identify subject labor organizations:']]/following-sibling::div//span[@class='i-value']/text()").get(default='')
 
             activities_list.append(
-                {'nature of activity': nature_of_activity,
-                 'period of performance': period_of_performance,
-                 'extent of performance': extent_of_performance,
+                {'nature_of_activity': nature_of_activity,
+                 'period_of_performance': period_of_performance,
+                 'extent_of_performance': extent_of_performance,
                  'performers': performer_list,
-                 'subject employees': subject_employees,
-                 'subject labor orgs': subject_labor_orgs})
+                 'subject_employees': subject_employees,
+                 'subject_labor_orgs': subject_labor_orgs})
 
         return activities_list
 
                               
+def clean_field(string):
+
+    return string\
+        .replace('\xa0', '')\
+        .strip(' :')\
+        .replace('.', '')\
+        .replace(' ', '_')\
+        .lower()

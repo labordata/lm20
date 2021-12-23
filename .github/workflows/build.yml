@@ -22,18 +22,23 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    container:
+      image: perl:latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2      
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         
       - name: install requirements
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          cpanm https://codeload.github.com/fgregg/json-to-multicsv/zip/refs/heads/master      
 
       # Runs a single command using the runners shell
       - name: build database
         run: |
-          make
+          make lm20.db
 
       - name: setup asset
         run: |
