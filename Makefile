@@ -24,47 +24,62 @@ old_lm20.db : filer.csv filing.csv attachment.csv employer.csv
 	sqlite-utils add-foreign-key $@ attachment rptId filing rptId
 	sqlite-utils add-foreign-key $@ employer rptId filing rptId
 
-lm20.db : form.csv lm20.csv lm21.csv
+lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachment.csv
+	sed -i.bak '1s/form\._key/rptId/g' *.csv
+	sed -i '1s/[a-z0-9]\+\.//g' form*.csv lm20.csv lm21.csv  #Ubuntu equivalent for macos: sed -i.bak -E '1s/[a-z0-9_]+\.//g'
 	for f in form.*.csv; do mv "$$f" "$${f/form./}"; done
 	mv specific_activities.performer.csv performer.csv
-	sed -i.bak '1s/form\._key/rptId/g' *.csv
-	sed -i.bak -E '1s/[a-z0-9]+\.//g' *.csv  #TODO: Works for macos, but the Ubuntu equivalent is: sed -i '1s/[a-z0-9]\+\.//g' *.csv
 	csvs-to-sqlite *.csv $@
-	sqlite-utils transform $@ form \
+	sqlite-utils transform $@ filer \
+            --pk srNum \
+            --drop filerType \
+            --column-order srNum \
+            --column-order companyName \
+            --column-order companyCity \
+            --column-order companyState
+	sqlite-utils transform $@ filing \
             --pk rptId \
-            --not-null rptId
+            --drop files \
+            --drop subLabOrg \
+            --drop termDate \
+            --drop amount \
+            --drop empTrdName \
+            --drop formLink
+	sqlite-utils transform $@ form \
+            --drop amended \
+            --drop date_fiscal_year_ends \
+            --drop period_begin \
+            --drop period_through \
+            --drop total_disbursements \
+            --drop type_of_person
+	sqlite-utils transform $@ lm20 \
+            --drop title
+	sqlite-utils transform $@ attachment \
+            --pk attachment_id \
+            --drop files \
+            --drop file_headers
+	sqlite-utils $@ "update lm20 set date_fiscal_year_ends = replace(date_fiscal_year_ends, ' / ', ' ')"
+	sqlite-utils convert $@ lm20 date_entered_into 'r.parsedate(value)'
+	sqlite-utils convert $@ lm21 period_begin 'r.parsedate(value)'
+	sqlite-utils convert $@ lm21 period_through 'r.parsedate(value)'
 	sqlite-utils vacuum $@
 	sqlite-utils add-foreign-keys $@ \
-               contact rptId form rptId \
-               receipts rptId form rptId \
-               signatures rptId form rptId \
-               specific_activities rptId form rptId
-                                              #TODO: LM20 form scrape: [lm20.employer.date_entered_into], [lm20.employer.title]
-                                              #TODO: LM21 form scrape: [lm21.period_begin], [lm21.period_through], ?[lm21.amended]
+               filing srNum filer srNum \
+               contact rptId filing rptId \
+               employer rptId filing rptId \
+               lm20 rptId filing rptId \
+               lm21 rptId filing rptId \
+               performer rptId filing rptId \
+               receipts rptId filing rptId \
+               signatures rptId filing rptId \
+               specific_activities rptId filing rptId
+               attachment rptId filing rptId
 
-
-
-employer.csv :
-	scrapy crawl employers -O $@
-
-attachment.csv :
-	scrapy crawl attachments -O $@
-
-lm20.csv : lm20.json
-	json-to-multicsv.pl --file $< \
-                      --path /:table:lm20 \
-                      --path /*/employer/:column \
-                      --path /*/direct_or_indirect/:column \
-                      --path /*/terms_and_conditions/:column
-	sed -i.bak '1s/lm20\._key/rptId/g' lm20.csv
-
-lm21.csv : lm21.json
-	json-to-multicsv.pl --file $< \
-                      --path /:table:lm21 \
-                      --path /*/disbursements/:column \
-                      --path /*/disbursements/individual_disbursements/:ignore \
-                      --path /*/schedule_disbursements/:column
-	sed -i.bak '1s/lm21\._key/rptId/g' lm21.csv
+filing.csv: filing.json
+	cat $< | jq -r '(map(keys) | add | unique) as $$cols | \
+                   map(. as $$row | $$cols | map($$row[.])) as $$rows | \
+                   $$cols, $$rows[] | \
+                   @csv' > $@
 
 form.csv : form.json
 	json-to-multicsv.pl --file $< \
@@ -86,6 +101,25 @@ form.csv : form.json
 	sed -i.bak '1s/form\.specific_activities\._key/activity_number/g' form.specific_activities.csv form.specific_activities.performer.csv
 	sed -i.bak '1s/form\.specific_activities\.performer\._key/performer_number/g' form.specific_activities.performer.csv
 
+lm20.csv : lm20.json
+	json-to-multicsv.pl --file $< \
+                      --path /:table:lm20 \
+                      --path /*/employer/:column \
+                      --path /*/direct_or_indirect/:column \
+                      --path /*/terms_and_conditions/:column
+	sed -i.bak '1s/lm20\._key/rptId/g' lm20.csv
+
+lm21.csv : lm21.json
+	json-to-multicsv.pl --file $< \
+                      --path /:table:lm21 \
+                      --path /*/disbursements/:column \
+                      --path /*/disbursements/individual_disbursements/:ignore \
+                      --path /*/schedule_disbursements/:column
+	sed -i.bak '1s/lm21\._key/rptId/g' lm21.csv
+
+filing.json: filing.jl
+	cat $< |  jq -s '.[] | del(.detailed_form_data, .file_headers) | .file_urls = .file_urls[0] | .files = .files[0]' | jq -s > $@
+
 lm20.json : form.json
 	cat $< | jq 'with_entries( select(.value.formFiled == "LM-20")| \
                              del(.value.file_number, \
@@ -106,6 +140,13 @@ lm21.json : form.json
 
 form.json : filing.jl
 	cat $< |  jq -s '.[] | .detailed_form_data + {rptId, formFiled} | select(.file_number)' | jq -s | jq 'INDEX(.rptId) | with_entries(.value |= del(.rptId))' > $@
+
+
+attachment.csv :
+	scrapy crawl attachments -O $@
+
+employer.csv :
+	scrapy crawl employers -O $@
 
 filing.jl :
 	scrapy crawl filings -O $@
