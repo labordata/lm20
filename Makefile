@@ -25,8 +25,8 @@ old_lm20.db : filer.csv filing.csv attachment.csv employer.csv
 	sqlite-utils add-foreign-key $@ employer rptId filing rptId
 
 lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachment.csv
-	sed -i.bak '1s/form\._key/rptId/g' *.csv
-	sed -i '1s/[a-z0-9]\+\.//g' form*.csv lm20.csv lm21.csv  #Ubuntu equivalent for macos: sed -i.bak -E '1s/[a-z0-9_]+\.//g'
+	sed -i '' '1s/form\._key/rptId/g' *.csv
+	sed -i '' '1s/[a-z0-9]+\.//g' form*.csv lm20.csv lm21.csv
 	for f in form.*.csv; do mv "$$f" "$${f/form./}"; done
 	mv specific_activities.performer.csv performer.csv
 	csvs-to-sqlite *.csv $@
@@ -72,7 +72,7 @@ lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachmen
                performer rptId filing rptId \
                receipts rptId filing rptId \
                signatures rptId filing rptId \
-               specific_activities rptId filing rptId
+               specific_activities rptId filing rptId \
                attachment rptId filing rptId
 
 filing.csv: filing.json
@@ -127,7 +127,6 @@ lm20.json : form.json
                                  .value.signatures, \
                                  .value.specific_activities, \
                                  .value.formFiled))' > $@
-                    # keep {rptId, amended, employer, date_fiscal_year_ends, type_of_person, direct_or_indirect, terms_and_conditions}
 
 lm21.json : form.json
 	cat $< | jq 'with_entries( select(.value.formFiled == "LM-21") | \
@@ -136,7 +135,6 @@ lm21.json : form.json
                                  .value.signatures, \
                                  .value.receipts, \
                                  .value.formFiled))' > $@
-                    # keep {rptId, period_begin, period_through, disbursements, schedule_disbursements, total_disbursements}
 
 form.json : filing.jl
 	cat $< |  jq -s '.[] | .detailed_form_data + {rptId, formFiled} | select(.file_number)' | jq -s | jq 'INDEX(.rptId) | with_entries(.value |= del(.rptId))' > $@
