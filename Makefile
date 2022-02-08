@@ -1,3 +1,5 @@
+SHELL=/bin/bash
+
 old_lm20.db : filer.csv filing.csv attachment.csv employer.csv
 	csvs-to-sqlite $^ $@
 	sqlite-utils transform $@ filer \
@@ -76,8 +78,8 @@ lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachmen
                attachment rptId filing rptId
 
 filing.csv: filing.json
-	cat $< | jq -r '(map(keys) | add | unique) as $$cols | $\
-                   map(. as $$row | $$cols | map($$row[.])) as $$rows | $\
+	cat $< | jq -r '(map(keys) | add | unique) as $$cols | \
+                   map(. as $$row | $$cols | map($$row[.])) as $$rows | \
                    $$cols, $$rows[] | \
                    @csv' > $@
 
@@ -121,19 +123,19 @@ filing.json: filing.jl
 	cat $< |  jq -s '.[] | del(.detailed_form_data, .file_headers) | .file_urls = .file_urls[0] | .files = .files[0]' | jq -s > $@
 
 lm20.json : form.json
-	cat $< | jq 'with_entries( select(.value.formFiled == "LM-20")| $\
-                             del(.value.file_number, $\
-                                 .value.person_filing, $\
-                                 .value.signatures, $\
-                                 .value.specific_activities, $\
+	cat $< | jq 'with_entries( select(.value.formFiled == "LM-20")| \
+                             del(.value.file_number, \
+                                 .value.person_filing, \
+                                 .value.signatures, \
+                                 .value.specific_activities, \
                                  .value.formFiled))' > $@
 
 lm21.json : form.json
-	cat $< | jq 'with_entries( select(.value.formFiled == "LM-21") | $\
-                             del(.value.file_number, $\
-                                 .value.person_filing, $\
-                                 .value.signatures, $\
-                                 .value.receipts, $\
+	cat $< | jq 'with_entries( select(.value.formFiled == "LM-21") | \
+                             del(.value.file_number, \
+                                 .value.person_filing, \
+                                 .value.signatures, \
+                                 .value.receipts, \
                                  .value.formFiled))' > $@
 
 form.json : filing.jl
