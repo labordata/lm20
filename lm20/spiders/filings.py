@@ -90,7 +90,7 @@ class LM20(Spider):
         item['file_headers'] = {response.request.url: response.headers.to_unicode_dict()}
 
         yield item
-        
+
     def parse_html_report(self, response, item, report):
 
         # baffling, sometimes when you request some resources
@@ -169,7 +169,7 @@ class LM21Report:
     def _statement_of_disbursements(cls, response):
 
         results = {}
-        
+
         tables_xpath = ".//div[text()='Disbursements to Officers and Employees: ']/parent::div/parent::div[@class='row']/following-sibling::div[@class='row']/table[@class='addTable']"
 
         tables = response.xpath(tables_xpath)
@@ -193,8 +193,8 @@ class LM21Report:
             results[clean_field(field_name)] = value
 
         return results
-        
-        
+
+
     @classmethod
     def _statement_of_receipts(cls, response):
 
@@ -223,9 +223,9 @@ class LM21Report:
                 parsed_receipts[clean_field(field)] = cls._get_i_value(receipt,
                                                                        field)
             results.append(parsed_receipts)
-                          
+
         return results
-        
+
 
     @classmethod
     def _signatures(cls, response):
@@ -280,8 +280,8 @@ class LM21Report:
                           'State:',
                           'ZIP code:')
             )
-    
-            
+
+
     @classmethod
     def _parse_section(cls, response, section_label, field_labels):
         section = cls._section(
@@ -296,8 +296,8 @@ class LM21Report:
                 field).strip()
         return section_dict
 
-        
-    
+
+
     @classmethod
     def _section(cls, response, label_text):
 
@@ -322,10 +322,13 @@ class LM21Report:
             following_text_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::text()[1]"
             result = tree.xpath(following_text_xpath)
 
-            
+        if not result:
+            nonnormal_i_value_xpath = f".//span[@class='i-label' and text()='{label_text}']/following-sibling::span[@class='i-value'][1]/text()"
+            result = tree.xpath(nonnormal_i_value_xpath)
+
         return result.get(default='').strip()
-        
-        
+
+
 class LM20Report:
 
     @classmethod
@@ -355,7 +358,7 @@ class LM20Report:
 
         form_dict['employer']['date_entered_into'] =\
             cls._get_i_value(response,
-                             'Date enteredinto')
+                             'Date entered into')
 
         form_dict['signatures'] = cls._signatures(response)
 
@@ -405,7 +408,7 @@ class LM20Report:
 
         assert checked_value is not None
         return checked_value
-            
+
     @classmethod
     def _parse_section(cls, response, section_label, field_labels):
         section = cls._section(
@@ -420,8 +423,8 @@ class LM20Report:
                 field).strip()
         return section_dict
 
-        
-    
+
+
     @classmethod
     def _section(cls, response, label_text):
 
@@ -446,10 +449,10 @@ class LM20Report:
             following_text_xpath = f".//span[@class='i-label' and normalize-space(text())='{label_text}']/following-sibling::text()[1]"
             result = tree.xpath(following_text_xpath)
 
-            
+
         return result.get(default='').strip()
-        
-        
+
+
     @classmethod
     def _signatures(cls, response):
 
@@ -518,7 +521,7 @@ class LM20Report:
 
         section = response.xpath("//div[@class='myTable' and descendant::span[@class='i-label' and text()='Specific Activities to be performed']]")
 
-        
+
         activities = section.xpath(".//div[@class='row' and descendant::span[@class='i-label' and text()='Activity']]")
 
         activities_list = []
@@ -551,7 +554,7 @@ class LM20Report:
                 for field in fields:
                     performer_dict[clean_field(field)] = cls._get_i_value(performer_section,
                                                                           field)
-                    
+
                 performer_list.append(performer_dict)
 
             subject_employees = subsection.xpath(".//div[@class='row' and descendant::span[@class='i-label' and text()=' 12.a. Identify subject groups of employees:']]/following-sibling::div[@class='i-sectionbody']/span[@class='i-value']/text()").get(default='')
@@ -568,7 +571,7 @@ class LM20Report:
 
         return activities_list
 
-                              
+
 def clean_field(string):
 
     return string\
