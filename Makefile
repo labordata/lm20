@@ -27,8 +27,8 @@ old_lm20.db : filer.csv filing.csv attachment.csv employer.csv
 	sqlite-utils add-foreign-key $@ employer rptId filing rptId
 
 lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachment.csv
-	sed -i '' '1s/form\._key/rptId/g' *.csv
-	sed -i '' '1s/[a-z0-9]+\.//g' form*.csv lm20.csv lm21.csv
+	sed -i.bak '1s/form\._key/rptId/g' *.csv
+	sed -i.bak '1s/[a-z0-9]+\.//g' form*.csv lm20.csv lm21.csv
 	for f in form.*.csv; do mv "$$f" "$${f/form./}"; done
 	mv specific_activities.performer.csv performer.csv
 	csvs-to-sqlite *.csv $@
@@ -78,10 +78,7 @@ lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachmen
                attachment rptId filing rptId
 
 filing.csv: filing.json
-	cat $< | jq -r '(map(keys) | add | unique) as $$cols | \
-                   map(. as $$row | $$cols | map($$row[.])) as $$rows | \
-                   $$cols, $$rows[] | \
-                   @csv' > $@
+	cat $< | jq -r '(map(keys) | add | unique) as $$cols | map(. as $$row | $$cols | map($$row[.])) as $$rows | $$cols, $$rows[] | @csv' > $@
 
 form.csv : form.json
 	json-to-multicsv.pl --file $< \
@@ -123,20 +120,10 @@ filing.json: filing.jl
 	cat $< |  jq -s '.[] | del(.detailed_form_data, .file_headers) | .file_urls = .file_urls[0] | .files = .files[0]' | jq -s > $@
 
 lm20.json : form.json
-	cat $< | jq 'with_entries( select(.value.formFiled == "LM-20")| \
-                             del(.value.file_number, \
-                                 .value.person_filing, \
-                                 .value.signatures, \
-                                 .value.specific_activities, \
-                                 .value.formFiled))' > $@
+	cat $< | jq 'with_entries( select(.value.formFiled == "LM-20")| del(.value.file_number, .value.person_filing, .value.signatures, .value.specific_activities, .value.formFiled))' > $@
 
 lm21.json : form.json
-	cat $< | jq 'with_entries( select(.value.formFiled == "LM-21") | \
-                             del(.value.file_number, \
-                                 .value.person_filing, \
-                                 .value.signatures, \
-                                 .value.receipts, \
-                                 .value.formFiled))' > $@
+	cat $< | jq 'with_entries( select(.value.formFiled == "LM-21") | del(.value.file_number, .value.person_filing, .value.signatures, .value.receipts, .value.formFiled))' > $@
 
 form.json : filing.jl
 	cat $< |  jq -s '.[] | .detailed_form_data + {rptId, formFiled} | select(.file_number)' | jq -s | jq 'INDEX(.rptId) | with_entries(.value |= del(.rptId))' > $@
