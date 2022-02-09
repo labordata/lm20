@@ -44,7 +44,8 @@ lm20.db : lm20.csv lm21.csv filer.csv filing.csv employer.csv attachment.csv con
                signatures rptId filing rptId \
                specific_activity rptId filing rptId \
                attachment rptId filing rptId \
-               performer specific_activity_id specific_activity id
+               performer specific_activity_id specific_activity id \
+               individual_disbursements rptId filing rptId
 
 filing.csv: filing.json
 	cat $< | jq -r '(map(keys) | add | unique) as $$cols | map(. as $$row | $$cols | map($$row[.])) as $$rows | $$cols, $$rows[] | @csv' > $@
@@ -82,6 +83,7 @@ contact.csv : form.contact.csv
 
 individual_disbursements.csv : lm21_raw.individual_disbursements.csv
 	cat $< | \
+            sed '1s/lm21_raw\.individual_disbursements\._key/disbursement_order/g' | \
             sed '1s/lm21_raw\._key/rptId/g' | \
 	    sed -r '1s/[a-z0-9_]+\.//g' > $@
 
@@ -121,7 +123,7 @@ lm21_raw.csv lm21_raw.individual_disbursements.csv : lm21.json
 
 
 filing.json: filing.jl
-	cat $< |  jq -s '.[] | del(.detailed_form_data, .file_headers) | .file_urls = .file_urls[0] | .files = .files[0]' | jq -s > $@
+	cat $< |  jq -s '.[] | del(.detailed_form_data, .file_headers, .file_urls) | .files = .files[0]' | jq -s > $@
 
 lm20.json : form.json
 	cat $< | jq 'with_entries( select(.value.formFiled == "LM-20")| del(.value.file_number, .value.person_filing, .value.signatures, .value.specific_activities, .value.formFiled))' > $@

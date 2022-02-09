@@ -57,6 +57,8 @@ class LM20(Spider):
 
             report_url = 'https://olmsapps.dol.gov/query/orgReport.do?rptId={rptId}&rptForm={formLink}'.format(**filing)
 
+            filing['filing_url'] = report_url
+
             # These three conditions seem sufficient to identify that
             # a filing was submitted electronically and if we
             # request the filing form, we'll get back a web page
