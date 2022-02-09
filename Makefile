@@ -28,7 +28,7 @@ old_lm20.db : filer.csv filing.csv attachment.csv employer.csv
 
 lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachment.csv
 	sed -i.bak '1s/form\._key/rptId/g' *.csv
-	sed -i.bak '1s/[a-z0-9]+\.//g' form*.csv lm20.csv lm21.csv
+	sed -i.bak -r '1s/[a-z0-9]+\.//g' form*.csv lm20.csv lm21.csv
 	for f in form.*.csv; do mv "$$f" "$${f/form./}"; done
 	mv specific_activities.performer.csv performer.csv
 	csvs-to-sqlite *.csv $@
@@ -79,6 +79,8 @@ lm20.db : form.csv lm20.csv lm21.csv filer.csv filing.csv employer.csv attachmen
 
 filing.csv: filing.json
 	cat $< | jq -r '(map(keys) | add | unique) as $$cols | map(. as $$row | $$cols | map($$row[.])) as $$rows | $$cols, $$rows[] | @csv' > $@
+
+
 
 form.csv : form.json
 	json-to-multicsv.pl --file $< \
