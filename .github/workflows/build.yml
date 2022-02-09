@@ -27,21 +27,26 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2      
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: shogo82148/actions-setup-perl@v1        
         
       - name: install requirements
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          cpanm https://github.com/jsnell/json-to-multicsv/archive/refs/heads/master.zip
 
       # Runs a single command using the runners shell
       - name: build database
         run: |
-          make
+          make lm20.db
 
       - name: setup asset
         run: |
           zip lm20.db.zip lm20.db
 
       - name: release
+        if: github.ref == 'refs/heads/main'
         uses: WebFreak001/deploy-nightly@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
