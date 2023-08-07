@@ -107,7 +107,7 @@ class LM20(Spider):
 
         item["file_urls"] = [response.request.url]
         item["file_headers"] = {
-            response.request.url: response.headers.to_unicode_dict()
+            response.request.url: dict(response.headers.to_unicode_dict())
         }
 
         yield item
