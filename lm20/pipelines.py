@@ -45,7 +45,7 @@ class ReportLink:
             adapter["file_urls"] = [report_url]
 
             request = Request(report_url, method="HEAD")
-            response = await spider.crawler.engine.download(request, spider)
+            response = await spider.crawler.engine.download(request)
 
             adapter["file_headers"] = {request.url: response.headers}
 
@@ -60,7 +60,7 @@ class AttachmentHeaders:
         for file_url in adapter["file_urls"]:
 
             request = Request(file_url, method="HEAD")
-            response = await spider.crawler.engine.download(request, spider)
+            response = await spider.crawler.engine.download(request)
 
             adapter["file_headers"][file_url] = response.headers
 
