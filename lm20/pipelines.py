@@ -3,6 +3,7 @@ import hashlib
 import mimetypes
 import os
 import cgi
+import re
 
 import dateutil.parser
 
@@ -132,7 +133,27 @@ class StandardDate:
 
         time_str = adapter["termDate"]
         if time_str:
-            adapter["termDate"] = dateutil.parser.parse(time_str).date()
+            try:
+                adapter["termDate"] = dateutil.parser.parse(time_str).date()
+            except dateutil.parser._parser.ParserError:
+                try:
+                    if re.search('[a-zA-Z]', time_str):
+                        # Contains letters, but can't be parsed. ex: "on-going"
+                        adapter["termDate"] = time_str.lower()
+                    elif time_str.isnumeric():
+                        # Unformatted date. ex: MMDDYYYY
+                        formatted_str = f"{time_str[:2]}/{time_str[2:4]}/{time_str[4:]}"
+                        adapter["termDate"] = dateutil.parser.parse(formatted_str).date()
+                    else:
+                        # Incorrectly formatted date. ex: MMDD/YY
+                        formatted_str = f"{time_str[:2]}/{time_str[2:]}"
+                        if formatted_str.count('/') == 2:
+                            adapter["termDate"] = dateutil.parser.parse(formatted_str).date()
+                        else:
+                            raise dateutil.parser._parser.ParserError
+                except dateutil.parser._parser.ParserError:
+                    print("Could not parse date from string:", time_str)
+                    pass
 
         return item
 
