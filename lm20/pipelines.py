@@ -168,7 +168,11 @@ class HeaderMimetypePipeline(FilesPipeline):
 
         media_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
 
-        content_disposition = headers.get("Content-Disposition").decode()
+        if type(headers.get("Content-Disposition")) is str:
+            content_disposition = headers.get("Content-Disposition")
+        else:
+            content_disposition = headers.get("Content-Disposition").decode()
+
         _, params = cgi.parse_header(content_disposition)
         filename = params["filename"]
 
