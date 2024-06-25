@@ -168,27 +168,48 @@ class HeaderMimetypePipeline(FilesPipeline):
 
         media_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
 
-        content_disposition = headers.get("Content-Disposition").decode()
-        _, params = cgi.parse_header(content_disposition)
-        filename = params["filename"]
+        content_disposition = headers.get("Content-Disposition")
+        content_type = headers.get("Content-Type")
 
-        media_ext = os.path.splitext(filename)[1]
-        # Handles empty and wild extensions by trying to guess the
-        # mime type then extension or default to empty string otherwise
-        if media_ext not in mimetypes.types_map:
-            media_ext = ""
-            media_type = mimetypes.guess_type(filename)[0]
-            if media_type:
-                media_ext = mimetypes.guess_extension(media_type)
-            else:
-                media_ext = mimetypes.guess_extension(
-                    headers.get("Content-Type").decode("utf").split(";")[0]
-                )
-
-        if media_ext is None:
-            media_ext = ""
-
-        if media_ext in {"", ".bin"}:
-            media_ext = ".pdf"
+        media_ext = self.get_media_ext(content_disposition, content_type)
 
         return f"full/{media_guid}{media_ext}"
+    
+    def get_media_ext(self, raw_content_disposition, raw_content_type):
+        if raw_content_disposition:
+            # Disposition and type occassionally come in as bytes objects
+            try:
+                content_disposition = raw_content_disposition.decode()
+            except AttributeError:
+                content_disposition = raw_content_disposition
+
+            try:
+                content_type = raw_content_type.decode()
+            except AttributeError:
+                content_type = raw_content_type
+
+            _, params = cgi.parse_header(content_disposition)
+            filename = params["filename"]
+
+            media_ext = os.path.splitext(filename)[1]
+
+            # Handles empty and wild extensions by trying to guess the
+            # mime type then extension or default to empty string otherwise
+            if media_ext not in mimetypes.types_map:
+                media_ext = ""
+                media_type = mimetypes.guess_type(filename)[0]
+
+                if media_type:
+                    media_ext = mimetypes.guess_extension(media_type)
+
+                elif content_type:
+                    media_ext = mimetypes.guess_extension(
+                        content_type.split(";")[0]
+                    )
+        else:
+            media_ext = ""
+
+        if not media_ext or media_ext in {"", ".bin"}:
+            media_ext = ".pdf"
+
+        return media_ext

@@ -123,7 +123,7 @@ lm21_raw.csv lm21_raw.individual_disbursements.csv : lm21.json
 
 
 filing.json: filing.jl
-	cat $< |  jq -s '.[] | del(.detailed_form_data, .file_headers, .file_urls) | .files = .files[0]' | jq -s > $@
+	cat $< |  jq -s '.[] | del(.detailed_form_data, .file_headers, .file_urls) | .files = .files[0] | .file_path = .files.path | .file_checksum = .files.checksum | .file_status = .files.status | del(.files)' | jq -s > $@
 
 lm20.json : form.json
 	cat $< | jq 'with_entries( select(.value.formFiled == "LM-20")| del(.value.file_number, .value.person_filing, .value.signatures, .value.specific_activities, .value.formFiled))' > $@
