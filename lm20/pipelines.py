@@ -169,36 +169,23 @@ class HeaderMimetypePipeline(FilesPipeline):
         media_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
 
         content_disposition = headers.get("Content-Disposition")
-
-        if type(content_disposition) is bytes:
+        try:
+            # Occassionally comes in as a bytes object
             content_disposition = content_disposition.decode()
+        except AttributeError:
+            pass
 
         if content_disposition:
-            _, params = cgi.parse_header(content_disposition)
-            filename = params["filename"]
+            content_type = headers.get("Content-Type")
+            try:
+                # Occassionally comes in as a bytes object
+                content_type = content_type.decode()
+            except AttributeError:
+                pass
 
-            media_ext = os.path.splitext(filename)[1]
+            media_ext = self.get_media_ext(content_disposition, content_type)
         else:
-            filename = ""
             media_ext = ""
-
-        # Handles empty and wild extensions by trying to guess the
-        # mime type then extension or default to empty string otherwise
-        if media_ext not in mimetypes.types_map:
-            media_ext = ""
-            media_type = mimetypes.guess_type(filename)[0]
-            if media_type:
-                media_ext = mimetypes.guess_extension(media_type)
-            elif headers.get("Content-Type"):
-                content_type = headers["Content-Type"]
-                if type(content_type) is bytes:
-                    media_ext = mimetypes.guess_extension(
-                        content_type.decode("utf").split(";")[0]
-                    )
-                else:
-                    media_ext = mimetypes.guess_extension(
-                        content_type.split(";")[0]
-                    )
 
         if media_ext is None:
             media_ext = ""
@@ -207,3 +194,24 @@ class HeaderMimetypePipeline(FilesPipeline):
             media_ext = ".pdf"
 
         return f"full/{media_guid}{media_ext}"
+    
+    def get_media_ext(self, content_disposition, content_type):
+        _, params = cgi.parse_header(content_disposition)
+        filename = params["filename"]
+
+        media_ext = os.path.splitext(filename)[1]
+
+        # Handles empty and wild extensions by trying to guess the
+        # mime type then extension or default to empty string otherwise
+        if media_ext not in mimetypes.types_map:
+            media_ext = ""
+            media_type = mimetypes.guess_type(filename)[0]
+
+            if media_type:
+                media_ext = mimetypes.guess_extension(media_type)
+
+            elif content_type:
+                media_ext = mimetypes.guess_extension(
+                    content_type.split(";")[0]
+                )
+        return media_ext
