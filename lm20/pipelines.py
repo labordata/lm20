@@ -168,18 +168,16 @@ class HeaderMimetypePipeline(FilesPipeline):
 
         media_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
 
-        try:
-            content_disposition = headers.get("Content-Disposition").decode()
-        except AttributeError as e:
-            if type(headers.get("Content-Disposition")) is str:
-                content_disposition = headers.get("Content-Disposition")
-            else:
-                raise e
+        content_disposition = headers.get("Content-Disposition")
 
-        _, params = cgi.parse_header(content_disposition)
-        filename = params["filename"]
+        if content_disposition:
+            _, params = cgi.parse_header(content_disposition)
+            filename = params["filename"]
 
-        media_ext = os.path.splitext(filename)[1]
+            media_ext = os.path.splitext(filename)[1]
+        else:
+            media_ext = ""
+
         # Handles empty and wild extensions by trying to guess the
         # mime type then extension or default to empty string otherwise
         if media_ext not in mimetypes.types_map:
