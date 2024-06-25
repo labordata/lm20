@@ -170,12 +170,16 @@ class HeaderMimetypePipeline(FilesPipeline):
 
         content_disposition = headers.get("Content-Disposition")
 
+        if type(content_disposition) is bytes:
+            content_disposition = content_disposition.decode()
+
         if content_disposition:
             _, params = cgi.parse_header(content_disposition)
             filename = params["filename"]
 
             media_ext = os.path.splitext(filename)[1]
         else:
+            filename = ""
             media_ext = ""
 
         # Handles empty and wild extensions by trying to guess the
@@ -185,10 +189,16 @@ class HeaderMimetypePipeline(FilesPipeline):
             media_type = mimetypes.guess_type(filename)[0]
             if media_type:
                 media_ext = mimetypes.guess_extension(media_type)
-            else:
-                media_ext = mimetypes.guess_extension(
-                    headers.get("Content-Type").decode("utf").split(";")[0]
-                )
+            elif headers.get("Content-Type"):
+                content_type = headers["Content-Type"]
+                if type(content_type) is bytes:
+                    media_ext = mimetypes.guess_extension(
+                        content_type.decode("utf").split(";")[0]
+                    )
+                else:
+                    media_ext = mimetypes.guess_extension(
+                        content_type.split(";")[0]
+                    )
 
         if media_ext is None:
             media_ext = ""
