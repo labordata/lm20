@@ -58,7 +58,6 @@ jobs:
           asset_content_type: application/zip # required by GitHub API
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
       - name: seven days of releases
-        if: matrix.os == 'windows-latest'
         uses: WebFreak001/deploy-nightly@v3.1.0
         with:
           upload_url: https://uploads.github.com/repos/labordata/lm20/releases/53122891/assets{?name,label}
@@ -68,7 +67,6 @@ jobs:
           asset_content_type: application/zip # required by GitHub API
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
       - name: seven days of scraped data
-        if: matrix.os == 'windows-latest'
         uses: WebFreak001/deploy-nightly@v3.1.0
         with:
           upload_url: https://uploads.github.com/repos/labordata/lm20/releases/53122891/assets{?name,label}
