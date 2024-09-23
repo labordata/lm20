@@ -112,7 +112,7 @@ class LM20(Spider):
 
         yield item
 
-    def parse_html_report(self, response, item, report):
+    def parse_html_report(self, response, item, report, attempts=0):
 
         # baffling, sometimes when you request some resources
         # it returns html and sometime it returns a pdf
@@ -120,18 +120,23 @@ class LM20(Spider):
             response.headers.get("Content-Type").decode()
         )
 
+        keep_trying = True
+
         if content_type == "text/html" and b"Signature" in response.body:
 
             form_data = report.parse(response)
 
-            item["detailed_form_data"] = form_data
+            if str(item["srNum"]) == form_data["file_number"] or attempts > 2:
+                item["detailed_form_data"] = form_data
+                yield item
+                keep_trying = False
+            else:
+                attempts += 1
 
-            yield item
-
-        else:
+        if keep_trying:
             yield Request(
                 response.request.url,
-                cb_kwargs={"item": item, "report": report},
+                cb_kwargs={"item": item, "report": report, "attempts": attempts},
                 callback=self.parse_html_report,
                 dont_filter=True,
             )
