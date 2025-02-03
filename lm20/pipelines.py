@@ -2,8 +2,8 @@ import datetime
 import hashlib
 import mimetypes
 import os
-import cgi
 import re
+import requests
 
 import dateutil.parser
 
@@ -174,7 +174,7 @@ class HeaderMimetypePipeline(FilesPipeline):
         media_ext = self.get_media_ext(content_disposition, content_type)
 
         return f"full/{media_guid}{media_ext}"
-    
+
     def get_media_ext(self, raw_content_disposition, raw_content_type):
         if raw_content_disposition:
             # Disposition and type occassionally come in as bytes objects
@@ -188,7 +188,7 @@ class HeaderMimetypePipeline(FilesPipeline):
             except AttributeError:
                 content_type = raw_content_type
 
-            _, params = cgi.parse_header(content_disposition)
+            _, params = requests.utils._parse_content_type_header(content_disposition)
             filename = params["filename"]
 
             media_ext = os.path.splitext(filename)[1]

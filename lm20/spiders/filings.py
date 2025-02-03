@@ -1,4 +1,4 @@
-import cgi
+import requests
 
 from scrapy import Spider
 from scrapy.http import FormRequest, Request
@@ -116,7 +116,7 @@ class LM20(Spider):
 
         # baffling, sometimes when you request some resources
         # it returns html and sometime it returns a pdf
-        content_type, _ = cgi.parse_header(
+        content_type, _ = requests.utils._parse_content_type_header(
             response.headers.get("Content-Type").decode()
         )
 
