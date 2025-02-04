@@ -189,10 +189,8 @@ class HeaderMimetypePipeline(FilesPipeline):
                 content_type = raw_content_type
 
             m = Message()
-            m["content-type"] = content_disposition
-            (filename,) = [
-                value for param, value in m.get_params() if param == "filename"
-            ]
+            m["content-disposition"] = content_disposition
+            filename = m.get_filename()
 
             media_ext = os.path.splitext(filename)[1]
 

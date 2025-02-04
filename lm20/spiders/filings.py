@@ -118,7 +118,7 @@ class LM20(Spider):
         # it returns html and sometime it returns a pdf
         m = Message()
         m["content-type"] = response.headers.get("Content-Type").decode()
-        content_type, _ = m.get_params()[0]
+        content_type = m.get_content_type()
 
         keep_trying = True
 
