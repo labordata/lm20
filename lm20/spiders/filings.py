@@ -1,4 +1,4 @@
-import requests
+from email.message import Message
 
 from scrapy import Spider
 from scrapy.http import FormRequest, Request
@@ -116,9 +116,9 @@ class LM20(Spider):
 
         # baffling, sometimes when you request some resources
         # it returns html and sometime it returns a pdf
-        content_type, _ = requests.utils._parse_content_type_header(
-            response.headers.get("Content-Type").decode()
-        )
+        m = Message()
+        m["content-type"] = response.headers.get("Content-Type").decode()
+        content_type, _ = m.get_params()[0]
 
         keep_trying = True
 

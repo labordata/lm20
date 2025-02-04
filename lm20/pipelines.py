@@ -1,9 +1,9 @@
 import datetime
+from email.message import Message
 import hashlib
 import mimetypes
 import os
 import re
-import requests
 
 import dateutil.parser
 
@@ -188,8 +188,11 @@ class HeaderMimetypePipeline(FilesPipeline):
             except AttributeError:
                 content_type = raw_content_type
 
-            _, params = requests.utils._parse_content_type_header(content_disposition)
-            filename = params["filename"]
+            m = Message()
+            m["content-type"] = content_disposition
+            (filename,) = [
+                value for param, value in m.get_params() if param == "filename"
+            ]
 
             media_ext = os.path.splitext(filename)[1]
 
