@@ -415,6 +415,7 @@ class LM20Report:
                 "Name:",
                 "Title:",
                 "Organization:",
+                "EIN:",
                 "P.O. Box., Bldg., Room No., if any:",
                 "Street:",
                 "City:",
@@ -603,6 +604,8 @@ class LM20Report:
                 fields = (
                     "\xa0 Name:",
                     "\xa0 \xa0 \xa0 \xa0 \xa0Organization:",
+                    "Title:",
+                    "EIN:",
                     " \xa0 P.O. Box, Bldg., Room No., If any:",
                     "Street:",
                     "City:",
