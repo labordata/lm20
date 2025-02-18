@@ -415,6 +415,7 @@ class LM20Report:
                 "Name:",
                 "Title:",
                 "Organization:",
+                "EIN:",
                 "P.O. Box., Bldg., Room No., if any:",
                 "Street:",
                 "City:",
