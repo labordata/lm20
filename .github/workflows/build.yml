@@ -77,3 +77,11 @@ jobs:
           asset_content_type: application/ld+json # required by GitHub API
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
           ignore_hash: true
+
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
