@@ -1,4 +1,4 @@
-scrapy
+scrapy<2.13
 csvs-to-sqlite
 sqlite-utils
 https://github.com/LuighiV/csvs-to-sqlite/archive/refs/heads/main.zip
