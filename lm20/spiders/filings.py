@@ -606,6 +606,7 @@ class LM20Report:
                     "\xa0 \xa0 \xa0 \xa0 \xa0Organization:",
                     "Title:",
                     "EIN:",
+                    "File Number:",
                     " \xa0 P.O. Box, Bldg., Room No., If any:",
                     "Street:",
                     "City:",
