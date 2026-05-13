@@ -1,4 +1,4 @@
-scrapy<2.13
-csvs-to-sqlite
+scrapy>=2.11.0
+twisted>=24.3.0,<25.0.0
 sqlite-utils
 https://github.com/LuighiV/csvs-to-sqlite/archive/refs/heads/main.zip
