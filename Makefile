@@ -136,13 +136,13 @@ form.json : filing.jl
 
 
 attachment.csv :
-	scrapy crawl attachments -L 'WARNING' -O $@
+	scrapy crawl attachments -L 'INFO' -O $@
 
 employer.csv :
-	scrapy crawl employers -L 'WARNING' -O $@
+	scrapy crawl employers -L 'INFO' -O $@
 
 filing.jl :
-	scrapy crawl filings -L 'WARNING' -O $@
+	scrapy crawl filings -L 'INFO' -O $@
 
 filer.csv :
-	scrapy crawl filers -L 'WARNING' -O $@
+	scrapy crawl filers -L 'INFO' -O $@
