@@ -21,8 +21,10 @@ SPIDER_CONTRACTS = {
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'lm20 (+http://www.yourdomain.com)'
 
-# Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+# The DOL OLMS site has no robots.txt; the AWS load balancer returns a
+# 403 for the path, which Scrapy's robots middleware interprets as
+# "disallow everything" and blocks every spider request.
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
