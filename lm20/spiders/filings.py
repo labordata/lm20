@@ -51,8 +51,7 @@ class LM20(Spider):
         """
         @url https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet
         @filings_form
-        @returns items 2
-        @scrapes amended
+        @returns requests 2
         """
         for filing in response.json()["detail"]:
             del filing["attachmentId"]
