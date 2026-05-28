@@ -22,9 +22,9 @@ class LM20Filers(Spider):
         @cb_kwargs {"page": 0}
         @returns items 500
         @returns requests 1 1
-        """
-
+        """    
         filers = response.json()["filerList"]
+        self.logger.info(f"Page {page}: got {len(filers)} filers (status {response.status})")
         yield from filers
 
         if len(filers) == 500:

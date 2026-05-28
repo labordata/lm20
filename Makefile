@@ -1,5 +1,9 @@
 SHELL=/bin/bash
 
+define assert_not_empty
+(test -s $(1) || (echo "ERROR: $(1) is empty" && exit 1))
+endef
+
 
 lm20.db : lm20.csv lm21.csv filer.csv filing.csv employer.csv attachment.csv contact.csv receipts.csv signatures.csv specific_activity.csv performer.csv individual_disbursements.csv
 	csvs-to-sqlite $^ $@
@@ -136,13 +140,13 @@ form.json : filing.jl
 
 
 attachment.csv :
-	scrapy crawl attachments -L 'WARNING' -O $@
+	scrapy crawl attachments -L 'INFO' -O $@ && $(call assert_not_empty,$@)
 
 employer.csv :
-	scrapy crawl employers -L 'WARNING' -O $@
+	scrapy crawl employers -L 'INFO' -O $@ && $(call assert_not_empty,$@)
 
 filing.jl :
-	scrapy crawl filings -L 'WARNING' -O $@
+	scrapy crawl filings -L 'INFO' -O $@ && $(call assert_not_empty,$@)
 
 filer.csv :
-	scrapy crawl filers -L 'WARNING' -O $@
+	scrapy crawl filers -L 'INFO' -O $@ && $(call assert_not_empty,$@)
