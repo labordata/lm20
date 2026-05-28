@@ -14,6 +14,10 @@ class LM20(Spider):
         }
     }
 
+    async def start(self):
+        for req in self.start_requests():
+            yield req
+
     def start_requests(self):
         return [
             FormRequest(
@@ -47,13 +51,16 @@ class LM20(Spider):
                 callback=self.parse,
             )
 
+    def _iter_filings(self, response):
+        return response.json()["detail"]
+
     def parse_filings(self, response):
         """
         @url https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet
         @filings_form
         @returns requests 2
         """
-        for filing in response.json()["detail"]:
+        for filing in self._iter_filings(response):
             del filing["attachmentId"]
             del filing["fileName"]
             del filing["fileDesc"]
@@ -116,8 +123,9 @@ class LM20(Spider):
         # baffling, sometimes when you request some resources
         # it returns html and sometime it returns a pdf
         m = Message()
-        m["content-type"] = response.headers.get("Content-Type").decode()
-        content_type = m.get_content_type()
+        content_type_header = response.headers.get("Content-Type")
+        m["content-type"] = content_type_header.decode() if content_type_header else None
+        content_type = m.get_content_type() if content_type_header else None
 
         keep_trying = True
 
@@ -640,6 +648,51 @@ class LM20Report:
             )
 
         return activities_list
+
+
+class IncrementalFilings(LM20):
+    """Crawl filings for a specific list of filers (by srNum), skipping the
+    list endpoint entirely. Inputs come from scripts/discover_new_filings.py,
+    which forward-probes the rptId space to find new filings since the last
+    sync."""
+
+    name = "filings_incremental"
+
+    def __init__(
+        self, sr_nums=None, sr_nums_file=None, max_known_rpt_id=None, *args, **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        nums = []
+        if sr_nums:
+            nums.extend(sr_nums.split(","))
+        if sr_nums_file:
+            with open(sr_nums_file) as f:
+                nums.extend(f.read().split())
+        if not nums:
+            raise ValueError(
+                "pass either -a sr_nums=42,556 or -a sr_nums_file=/path/to/file"
+            )
+        self.sr_nums = sorted({int(n) for n in nums if n.strip()})
+        self.max_known_rpt_id = int(max_known_rpt_id) if max_known_rpt_id else None
+
+    def start_requests(self):
+        return [
+            FormRequest(
+                "https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet",
+                formdata={"srNum": "C-" + str(sr)},
+                callback=self.parse_filings,
+            )
+            for sr in self.sr_nums
+        ]
+
+    def _iter_filings(self, response):
+        for filing in response.json()["detail"]:
+            if (
+                self.max_known_rpt_id is not None
+                and filing["rptId"] <= self.max_known_rpt_id
+            ):
+                continue
+            yield filing
 
 
 def clean_field(string):

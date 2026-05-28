@@ -5,6 +5,10 @@ from scrapy.http import FormRequest
 class LM20Filers(Spider):
     name = "filers"
 
+    async def start(self):
+        for req in self.start_requests():
+            yield req
+
     def start_requests(self):
         return [
             FormRequest(
@@ -22,9 +26,9 @@ class LM20Filers(Spider):
         @cb_kwargs {"page": 0}
         @returns items 500
         @returns requests 1 1
-        """
-
+        """    
         filers = response.json()["filerList"]
+        self.logger.info(f"Page {page}: got {len(filers)} filers (status {response.status})")
         yield from filers
 
         if len(filers) == 500:

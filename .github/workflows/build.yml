@@ -41,7 +41,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: build database
         run: |
-          make lm20.db
+          make -f update.mk update
 
       - name: setup asset
         run: |
