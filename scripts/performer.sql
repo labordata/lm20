@@ -1,5 +1,7 @@
 -- performer.specific_activity_id in the CSV stores the activity_order
--- ordinal (not the actual specific_activity.id). Map it via OFFSET.
+-- ordinal from the JSON path key. Resolve it to specific_activity.id by
+-- joining on (rptId, activity_order) — the same logic as the main Makefile's
+-- sqlite-utils update step.
 BEGIN;
 DROP TABLE IF EXISTS raw_performer;
 .mode csv
@@ -12,18 +14,14 @@ INSERT INTO performer(
 )
 SELECT
     p.rptId,
-    (
-        SELECT sa.id
-        FROM specific_activity AS sa
-        WHERE sa.rptId = p.rptId
-        ORDER BY sa.id
-        LIMIT 1
-        OFFSET CAST(p.specific_activity_id AS INTEGER) - 1
-    ) AS specific_activity_id,
+    sa.id,
     p.performer_order,
     p.city, p.ein, p.file_number, p.name, p.organization,
     p."po_box,_bldg,_room_no,_if_any", p.state, p.street, p.title, p.zip
-FROM raw_performer p;
+FROM raw_performer p
+JOIN specific_activity sa
+    ON CAST(sa.rptId AS INTEGER) = CAST(p.rptId AS INTEGER)
+    AND CAST(sa.activity_order AS INTEGER) = CAST(p.specific_activity_id AS INTEGER);
 
 SELECT changes() || ' rows inserted into performer';
 

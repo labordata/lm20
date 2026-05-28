@@ -16,9 +16,8 @@ WHERE specific_activity_id IN (
 DELETE FROM specific_activity
 WHERE rptId IN (SELECT DISTINCT rptId FROM raw_specific_activity);
 
--- Insert in deterministic (rptId, activity_order) order so performer.sql
--- can recover the new id via OFFSET.
 -- `id` is omitted — SQLite assigns it automatically (INTEGER PRIMARY KEY).
+-- performer.sql resolves specific_activity_id by joining on (rptId, activity_order).
 INSERT INTO specific_activity(
     rptId, activity_order,
     specific_nature_of_activity, specific_period_of_performance,
@@ -30,8 +29,7 @@ SELECT
     specific_nature_of_activity, specific_period_of_performance,
     specific_extent_of_performance, specific_subject_employees,
     specific_subject_labor_orgs
-FROM raw_specific_activity
-ORDER BY CAST(rptId AS INTEGER), CAST(activity_order AS INTEGER);
+FROM raw_specific_activity;
 
 SELECT changes() || ' rows inserted into specific_activity';
 

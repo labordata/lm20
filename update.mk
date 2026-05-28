@@ -137,7 +137,11 @@ update_individual_disbursements: individual_disbursements.csv update_filing
 	fi
 
 update_filing: filing.csv update_filer
-	cat $< | sqlite3 lm20.db -init scripts/filing.sql -bail
+	@if [ "$$(wc -l < $<)" -gt 0 ]; then \
+	    cat $< | sqlite3 lm20.db -init scripts/filing.sql -bail; \
+	else \
+	    echo "update_filing: $< empty; no filings to merge" >&2; \
+	fi
 
 update_filer: filer.csv | lm20.db
 	@if [ "$$(wc -l < $<)" -gt 1 ]; then \
@@ -151,7 +155,11 @@ update_filer: filer.csv | lm20.db
 # ============================================================================
 
 filing.csv: filing.json
-	cat $< | jq -r '(map(keys) | add | unique) as $$cols | map(. as $$row | $$cols | map($$row[.])) as $$rows | $$cols, $$rows[] | @csv' > $@
+	@if [ "$$(jq 'length' $<)" -gt 0 ]; then \
+	    cat $< | jq -r '(map(keys) | add | unique) as $$cols | map(. as $$row | $$cols | map($$row[.])) as $$rows | $$cols, $$rows[] | @csv' > $@; \
+	else \
+	    : > $@; \
+	fi
 
 performer.csv : form.specific_activities.performer.csv
 	cat $< | \
