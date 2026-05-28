@@ -248,7 +248,7 @@ form.json : filing.jl
 # ============================================================================
 
 filing.jl: sr_nums.txt
-	scrapy crawl filings_incremental -L DEBUG -a sr_nums_file=$< -O $@
+	scrapy crawl filings_incremental -L WARNING -a sr_nums_file=$< -O $@
 
 employer.csv: sr_nums.txt
 	scrapy crawl employers_incremental -L WARNING -a sr_nums_file=$< -O $@
@@ -264,7 +264,7 @@ sr_nums.txt: FORCE lm20.db
 	python scripts/discover_new_filings.py lm20.db > $@
 
 filer.csv: FORCE
-	scrapy crawl filers -L DEBUG -O $@
+	scrapy crawl filers -L INFO -O $@
 
 # Bootstrap: fetch the prior nightly release if no local lm20.db.
 lm20.db:
