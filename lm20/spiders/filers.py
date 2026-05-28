@@ -5,6 +5,10 @@ from scrapy.http import FormRequest
 class LM20Filers(Spider):
     name = "filers"
 
+    async def start(self):
+        for req in self.start_requests():
+            yield req
+
     def start_requests(self):
         return [
             FormRequest(
