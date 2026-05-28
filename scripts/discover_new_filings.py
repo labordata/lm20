@@ -16,6 +16,7 @@ Usage: python scripts/discover_new_filings.py lm20.db
 import argparse
 import sqlite3
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
@@ -27,12 +28,13 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 REPORT_URL = "https://olmsapps.dol.gov/query/orgReport.do?rptId={}&rptForm={}"
 PROBE_FORMS = ("LM2Form", "LM10Form", "LM20Form", "LM30Form", "S1Form")
 SCAN_FORMS = ("LM20Form", "LM21Form")
-SCAN_CONCURRENCY = 6
+SCAN_CONCURRENCY = 1
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 
 def _session():
     s = requests.Session()
-    s.headers["User-Agent"] = "lm20-discover"
+    s.headers["User-Agent"] = USER_AGENT
     s.verify = False
     return s
 
@@ -139,6 +141,7 @@ def main():
     sr_nums = set()
 
     def scan_one(rpt_id):
+        time.sleep(2)
         body, _ = fetch_lm2021_html(sess, rpt_id)
         if body is None:
             return None
