@@ -10,6 +10,7 @@ import dateutil.parser
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from scrapy.pipelines.files import FilesPipeline
+from scrapy.utils.defer import maybe_deferred_to_future
 from scrapy.utils.python import to_bytes
 from scrapy.http import Request
 
@@ -46,7 +47,12 @@ class ReportLink:
             adapter["file_urls"] = [report_url]
 
             request = Request(report_url, method="HEAD")
-            response = await spider.crawler.engine.download(request)
+            # engine.download returns a twisted Deferred, which can't be
+            # awaited directly in the asyncio task scrapy >= 2.15 runs
+            # item pipelines in
+            response = await maybe_deferred_to_future(
+                spider.crawler.engine.download(request)
+            )
 
             adapter["file_headers"] = {request.url: response.headers}
 
@@ -61,7 +67,9 @@ class AttachmentHeaders:
         for file_url in adapter["file_urls"]:
 
             request = Request(file_url, method="HEAD")
-            response = await spider.crawler.engine.download(request)
+            response = await maybe_deferred_to_future(
+                spider.crawler.engine.download(request)
+            )
 
             adapter["file_headers"][file_url] = response.headers
 
@@ -110,7 +118,7 @@ class Nullify:
                 nulls += 1
 
         if len(fields) == nulls:
-            raise DropItem
+            raise DropItem("every employer field is empty")
 
         return item
 
