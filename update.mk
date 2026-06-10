@@ -18,7 +18,12 @@ PRIOR_DB_URL ?= https://github.com/labordata/lm20/releases/download/nightly/lm20
 
 # Cache responses for the length of the run so the three incremental
 # spiders fetch each filer's detail page once instead of three times.
-CACHE_FLAGS := -s HTTPCACHE_ENABLED=True -s HTTPCACHE_EXPIRATION_SECS=0
+# The shared storage class de-namespaces the cache (stock scrapy keys
+# it by spider name); error responses are not cached so a transient
+# block doesn't poison the later spiders.
+CACHE_FLAGS := -s HTTPCACHE_ENABLED=True -s HTTPCACHE_EXPIRATION_SECS=0 \
+    -s HTTPCACHE_STORAGE=lm20.httpcache.SharedFilesystemCacheStorage \
+    -s HTTPCACHE_IGNORE_HTTP_CODES=400,403,404,429,500,502,503,504
 
 .DELETE_ON_ERROR:
 
@@ -97,8 +102,13 @@ update_performer: update_specific_activity
 # Spider outputs
 # ============================================================================
 
+# Every discovered filer was discovered FROM a filing, so its detail
+# feed must yield at least one item; fewer items than filers means the
+# crawl was blocked (OLMS 403s), not that there was nothing to fetch.
 filing.jl: sr_nums.txt
 	scrapy crawl filings_incremental $(CACHE_FLAGS) -L INFO -a sr_nums_file=$< -O $@
+	@[ "$$(wc -l < $@)" -ge "$$(wc -l < $<)" ] || \
+	    (echo "ERROR: $@ has fewer filings than discovered filers; crawl was likely blocked" >&2 && exit 1)
 
 employer.csv: sr_nums.txt
 	scrapy crawl employers_incremental $(CACHE_FLAGS) -L INFO -a sr_nums_file=$< -O $@

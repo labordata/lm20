@@ -73,9 +73,29 @@ def insert_rows(conn, table, columns, rows, replace=False):
     return len(rows)
 
 
+# Tables whose rows derive from the same crawl as the filing batch
+# (filing.jl -> form.json). Clearing them for incoming rptIds is safe
+# because the batch is guaranteed to carry their replacement rows.
+# employer and attachment come from SEPARATE crawls, so they are not
+# cleared here: if their crawl fails (e.g. OLMS starts returning 403s
+# mid-run) their empty merge must not leave half-deleted tables behind.
+SAME_CRAWL_TABLES = (
+    "lm20",
+    "lm21",
+    "contact",
+    "receipts",
+    "signatures",
+    "specific_activity",
+    "performer",
+    "individual_disbursements",
+)
+
+
 def merge_filing(conn, columns, rows):
+    # the column is absent entirely when no filing in the batch is an
+    # amendment (filing.csv carries only the keys present in the batch)
     superseded = {
-        int(row["originalRptId"]) for row in rows if row["originalRptId"]
+        int(row["originalRptId"]) for row in rows if row.get("originalRptId")
     } - incoming_rptids(rows)
     for table in tables_with_rptid(conn):
         removed = delete_by_rptid(conn, table, superseded)
@@ -84,9 +104,9 @@ def merge_filing(conn, columns, rows):
                 f"filing: removed {removed} {table} rows superseded by amendments",
                 file=sys.stderr,
             )
-        if table != "filing":
-            # cleared here, repopulated by that table's own merge
-            delete_by_rptid(conn, table, incoming_rptids(rows))
+    for table in SAME_CRAWL_TABLES:
+        # cleared here, repopulated by that table's own merge
+        delete_by_rptid(conn, table, incoming_rptids(rows))
     deleted = delete_by_rptid(conn, "filing", incoming_rptids(rows))
     return deleted, insert_rows(conn, "filing", columns, rows)
 
