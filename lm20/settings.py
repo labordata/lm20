@@ -25,18 +25,22 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36
 ROBOTSTXT_OBEY = True
 
 FILES_STORE = "./reports"
-FILES_EXPIRES = 0
+# Report documents already in ./reports (the tracked files restored by
+# checkout) are not re-downloaded within the default FILES_EXPIRES
+# window — skipping them is most of the traffic reduction that keeps
+# OLMS from 403-blocking the incremental crawls.
 
-# Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+# OLMS 403-blocks heavy traffic, so crawl lightly: cap per-domain
+# concurrency and let AutoThrottle pace requests by observed latency.
+# BlockingBackoffMiddleware handles any 403/429 that still gets
+# through (exponential backoff + retry, abort when persistently
+# blocked).
+CONCURRENT_REQUESTS_PER_DOMAIN = 4
 
-# Configure a delay for requests for the same website (default: 0)
-# See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
-# The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 4
-# CONCURRENT_REQUESTS_PER_IP = 16
+AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_START_DELAY = 1
+AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_TARGET_CONCURRENCY = 4.0
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
@@ -58,9 +62,9 @@ FILES_EXPIRES = 0
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'lm20.middlewares.Lm20DownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    "lm20.middlewares.BlockingBackoffMiddleware": 560,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html

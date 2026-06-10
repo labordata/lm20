@@ -17,6 +17,7 @@ Usage: python scripts/discover_new_filings.py lm20.db
 import argparse
 import sqlite3
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -43,16 +44,41 @@ def _session():
     return s
 
 
+BLOCK_CODES = (403, 429)
+
+
 def fetch(session, rpt_id, form):
     """Return (content_type, body); the body is read only for HTML
-    responses, so probing a multi-megabyte PDF costs only its headers."""
-    with session.get(
-        REPORT_URL.format(rpt_id, form), timeout=30, stream=True
-    ) as response:
-        content_type = response.headers.get("Content-Type", "").split(";")[0].strip()
-        if content_type != "text/html":
-            return content_type, b""
-        return content_type, response.content
+    responses, so probing a multi-megabyte PDF costs only its headers.
+
+    OLMS rate-limits with 403s; those are NOT "not found" — back off
+    and retry, and abort discovery if the block persists, since a
+    blocked scan is indistinguishable from "no new filings".
+    """
+    url = REPORT_URL.format(rpt_id, form)
+    delay = 5
+    for _ in range(5):
+        with session.get(url, timeout=30, stream=True) as response:
+            if response.status_code in BLOCK_CODES:
+                print(
+                    f"# OLMS returned {response.status_code} for {url};"
+                    f" backing off {delay}s",
+                    file=sys.stderr,
+                )
+                time.sleep(delay)
+                delay *= 2
+                continue
+            content_type = (
+                response.headers.get("Content-Type", "").split(";")[0].strip()
+            )
+            if content_type != "text/html":
+                return content_type, b""
+            return content_type, response.content
+    raise RuntimeError(
+        f"OLMS kept returning {'/'.join(map(str, BLOCK_CODES))} for {url};"
+        " we are blocked — aborting discovery rather than reporting"
+        " 'no new filings'"
+    )
 
 
 def fetch_assigned(session, rpt_id, form):
