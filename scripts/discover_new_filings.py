@@ -8,7 +8,8 @@ each hit's HTML for the filer's srNum. srNums go to stdout, one per
 line.
 
 Paper filings come back as PDFs we can't trivially parse; we skip them
-and let the periodic full backfill pick them up.
+here and rely on the scheduled full rebuild
+(.github/workflows/full-build.yml) to pick them up.
 
 Usage: python scripts/discover_new_filings.py lm20.db
 """
@@ -17,10 +18,15 @@ import argparse
 import sqlite3
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 import requests
 import urllib3
 from parsel import Selector
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from lm20.settings import USER_AGENT  # noqa: E402
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -28,7 +34,6 @@ REPORT_URL = "https://olmsapps.dol.gov/query/orgReport.do?rptId={}&rptForm={}"
 PROBE_FORMS = ("LM2Form", "LM10Form", "LM20Form", "LM30Form", "S1Form")
 SCAN_FORMS = ("LM20Form", "LM21Form")
 SCAN_CONCURRENCY = 4
-USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 
 def _session():
@@ -38,6 +43,18 @@ def _session():
     return s
 
 
+def fetch(session, rpt_id, form):
+    """Return (content_type, body); the body is read only for HTML
+    responses, so probing a multi-megabyte PDF costs only its headers."""
+    with session.get(
+        REPORT_URL.format(rpt_id, form), timeout=30, stream=True
+    ) as response:
+        content_type = response.headers.get("Content-Type", "").split(";")[0].strip()
+        if content_type != "text/html":
+            return content_type, b""
+        return content_type, response.content
+
+
 def fetch_assigned(session, rpt_id, form):
     """True if `rpt_id` is assigned to `form`.
 
@@ -45,27 +62,26 @@ def fetch_assigned(session, rpt_id, form):
     fetch their data asynchronously. The OLMS "not found" page is a
     plain HTML stub without ng-app.
     """
-    r = session.get(REPORT_URL.format(rpt_id, form), timeout=30)
-    ct = r.headers.get("Content-Type", "").split(";")[0].strip()
-    if ct == "application/pdf":
+    content_type, body = fetch(session, rpt_id, form)
+    if content_type == "application/pdf":
         return True
-    return ct == "text/html" and b"ng-app=" in r.content
+    return content_type == "text/html" and b"ng-app=" in body
 
 
 def is_assigned(session, rpt_id):
-    with ThreadPoolExecutor(max_workers=len(PROBE_FORMS)) as ex:
-        return any(ex.map(lambda f: fetch_assigned(session, rpt_id, f), PROBE_FORMS))
+    # any() short-circuits, and an assigned rptId renders under
+    # whichever form is asked first, so this usually costs one request.
+    return any(fetch_assigned(session, rpt_id, form) for form in PROBE_FORMS)
 
 
 def fetch_lm2021_html(session, rpt_id):
-    """Return (html_bytes, form_name) if rpt_id is an electronic LM-20 or
-    LM-21, else None."""
+    """Return html_bytes if rpt_id is an electronic LM-20 or LM-21,
+    else None."""
     for form in SCAN_FORMS:
-        r = session.get(REPORT_URL.format(rpt_id, form), timeout=30)
-        ct = r.headers.get("Content-Type", "").split(";")[0].strip()
-        if ct == "text/html" and b"Signature" in r.content:
-            return r.content, form
-    return None, None
+        content_type, body = fetch(session, rpt_id, form)
+        if content_type == "text/html" and b"Signature" in body:
+            return body
+    return None
 
 
 def bisect_max_assigned(session, low, initial_step=10_000, max_probes=40):
@@ -129,6 +145,15 @@ def main():
     max_known = max_known_lm2021(args.db)
     print(f"# max known rptId: {max_known}", file=sys.stderr)
 
+    # Canary: max_known is assigned by definition (it's in our DB), so
+    # if the probe can't see it, the markup heuristics have broken and
+    # an empty scan would mean "discovery is blind", not "nothing new".
+    if max_known and not is_assigned(sess, max_known):
+        raise RuntimeError(
+            f"rptId {max_known} is in {args.db} but the OLMS probe reports"
+            " it unassigned; the ng-app/content-type heuristics are broken"
+        )
+
     max_assigned = bisect_max_assigned(sess, max_known)
     window = range(max_known + 1, max_assigned + 1)
     print(
@@ -140,7 +165,7 @@ def main():
     sr_nums = set()
 
     def scan_one(rpt_id):
-        body, _ = fetch_lm2021_html(sess, rpt_id)
+        body = fetch_lm2021_html(sess, rpt_id)
         if body is None:
             return None
         return extract_sr_num(body)

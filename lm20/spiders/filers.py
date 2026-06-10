@@ -6,18 +6,12 @@ class LM20Filers(Spider):
     name = "filers"
 
     async def start(self):
-        for req in self.start_requests():
-            yield req
-
-    def start_requests(self):
-        return [
-            FormRequest(
-                "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
-                formdata={"clearCache": "F", "page": "1"},
-                cb_kwargs={"page": 1},
-                callback=self.parse,
-            )
-        ]
+        yield FormRequest(
+            "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
+            formdata={"clearCache": "F", "page": "1"},
+            cb_kwargs={"page": 1},
+            callback=self.parse,
+        )
 
     def parse(self, response, page):
         """
@@ -26,9 +20,11 @@ class LM20Filers(Spider):
         @cb_kwargs {"page": 0}
         @returns items 500
         @returns requests 1 1
-        """    
+        """
         filers = response.json()["filerList"]
-        self.logger.info(f"Page {page}: got {len(filers)} filers (status {response.status})")
+        self.logger.info(
+            f"Page {page}: got {len(filers)} filers (status {response.status})"
+        )
         yield from filers
 
         if len(filers) == 500:
