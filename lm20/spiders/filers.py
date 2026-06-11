@@ -5,15 +5,13 @@ from scrapy.http import FormRequest
 class LM20Filers(Spider):
     name = "filers"
 
-    def start_requests(self):
-        return [
-            FormRequest(
-                "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
-                formdata={"clearCache": "F", "page": "1"},
-                cb_kwargs={"page": 1},
-                callback=self.parse,
-            )
-        ]
+    async def start(self):
+        yield FormRequest(
+            "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
+            formdata={"clearCache": "F", "page": "1"},
+            cb_kwargs={"page": 1},
+            callback=self.parse,
+        )
 
     def parse(self, response, page):
         """
@@ -23,8 +21,10 @@ class LM20Filers(Spider):
         @returns items 500
         @returns requests 1 1
         """
-
         filers = response.json()["filerList"]
+        self.logger.info(
+            f"Page {page}: got {len(filers)} filers (status {response.status})"
+        )
         yield from filers
 
         if len(filers) == 500:

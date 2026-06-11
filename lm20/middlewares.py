@@ -1,103 +1,77 @@
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+"""OLMS rate-limits aggressive clients with HTTP 403s.
 
-from scrapy import signals
+Treat those as "slow down", not as content: back off the download slot,
+retry the request a few times, and if the server keeps blocking anyway,
+close the spider so the run ends with an obviously short output (which
+the Makefile guards turn into a failure) instead of quietly merging
+partial data.
+"""
 
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
+import logging
 
+from scrapy.downloadermiddlewares.retry import get_retry_request
 
-class Lm20SpiderMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the spider middleware does not modify the
-    # passed objects.
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
-
-    def process_spider_input(self, response, spider):
-        # Called for each response that goes through the spider
-        # middleware and into the spider.
-
-        # Should return None or raise an exception.
-        return None
-
-    def process_spider_output(self, response, result, spider):
-        # Called with the results returned from the Spider, after
-        # it has processed the response.
-
-        # Must return an iterable of Request, or item objects.
-        for i in result:
-            yield i
-
-    def process_spider_exception(self, response, exception, spider):
-        # Called when a spider or process_spider_input() method
-        # (from other spider middleware) raises an exception.
-
-        # Should return either None or an iterable of Request or item objects.
-        pass
-
-    def process_start_requests(self, start_requests, spider):
-        # Called with the start requests of the spider, and works
-        # similarly to the process_spider_output() method, except
-        # that it doesn’t have a response associated.
-
-        # Must return only requests (not items).
-        for r in start_requests:
-            yield r
-
-    def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
+logger = logging.getLogger(__name__)
 
 
-class Lm20DownloaderMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
+class BlockingBackoffMiddleware:
+    BLOCK_CODES = (403, 429)
+    MAX_RETRIES = 4
+    MAX_CONSECUTIVE_BLOCKS = 50
+    INITIAL_BACKOFF = 5.0
+    MAX_BACKOFF = 300.0
+
+    def __init__(self, crawler):
+        self.crawler = crawler
+        self.consecutive_blocks = 0
+        self.closing = False
 
     @classmethod
     def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
-
-    def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
+        return cls(crawler)
 
     def process_response(self, request, response, spider):
-        # Called with the response returned from the downloader.
+        if response.status not in self.BLOCK_CODES:
+            self.consecutive_blocks = 0
+            return response
 
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
-        return response
+        self.consecutive_blocks += 1
+        if self.consecutive_blocks >= self.MAX_CONSECUTIVE_BLOCKS:
+            if not self.closing:
+                self.closing = True
+                logger.error(
+                    "%d consecutive %s responses; OLMS has blocked us — "
+                    "closing %s",
+                    self.consecutive_blocks,
+                    response.status,
+                    spider.name,
+                )
+                self.crawler.engine.close_spider(spider, "blocked_by_server")
+            return response
 
-    def process_exception(self, request, exception, spider):
-        # Called when a download handler or a process_request()
-        # (from other downloader middleware) raises an exception.
+        self._back_off(request, response)
+        retry = get_retry_request(
+            request,
+            spider=spider,
+            reason=f"HTTP {response.status} (rate limited)",
+            max_retry_times=self.MAX_RETRIES,
+            stats_base_key="block_backoff",
+        )
+        if retry is None:
+            return response
+        return retry
 
-        # Must either:
-        # - return None: continue processing this exception
-        # - return a Response object: stops process_exception() chain
-        # - return a Request object: stops process_exception() chain
-        pass
-
-    def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
+    def _back_off(self, request, response):
+        key = request.meta.get("download_slot")
+        slot = self.crawler.engine.downloader.slots.get(key) if key else None
+        if slot is None:
+            return
+        new_delay = min(max(slot.delay * 2, self.INITIAL_BACKOFF), self.MAX_BACKOFF)
+        if new_delay > slot.delay:
+            logger.warning(
+                "HTTP %s from %s; backing off download slot to %.0fs",
+                response.status,
+                request.url,
+                new_delay,
+            )
+            slot.delay = new_delay

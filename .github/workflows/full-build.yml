@@ -1,47 +1,39 @@
-# This is a basic workflow to help you get started with Actions
+# Monthly from-scratch rebuild. The nightly incremental update
+# (build.yml) can't see paper filings, upstream deletions, or schema
+# drift; this full crawl reconciles the published database with OLMS
+# and refreshes the bootstrap asset the incremental path builds on.
 
-name: Update Database
+name: Full Database Rebuild
 
-concurrency: 
+concurrency:
   group: database-build
 
-
-# Controls when the action will run. 
 on:
   schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '15 4 * * *'
-  push:
-  pull_request:
+    - cron: '15 10 1 * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
       - uses: shogo82148/actions-setup-perl@v1
-        
+
       - name: install requirements
         run: |
           pip install -r requirements.txt
           cpanm https://github.com/jsnell/json-to-multicsv/archive/refs/heads/master.zip
 
-      # Runs a single command using the runners shell
       - name: build database
         run: |
-          make -f update.mk update
+          make lm20.db
 
       - name: setup asset
         run: |
@@ -70,9 +62,6 @@ jobs:
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
           ignore_hash: true
       - name: seven days of scraped data
-        # update.mk only produces filing.jl when new filings were
-        # discovered; nothing to upload on a quiet night
-        if: ${{ hashFiles('filing.jl') != '' }}
         uses: fgregg/deploy-nightly@master
         with:
           upload_url: https://uploads.github.com/repos/labordata/lm20/releases/53122891/assets{?name,label}
@@ -82,11 +71,3 @@ jobs:
           asset_content_type: application/ld+json # required by GitHub API
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
           ignore_hash: true
-
-  workflow-keepalive:
-    if: github.event_name == 'schedule'
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-    steps:
-      - uses: liskin/gh-workflow-keepalive@v1

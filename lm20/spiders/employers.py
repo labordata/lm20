@@ -1,6 +1,8 @@
 from scrapy import Spider
 from scrapy.http import FormRequest
 
+from lm20.spiders.incremental import SrNumSpiderMixin
+
 
 class Employers(Spider):
     name = "employers"
@@ -13,15 +15,13 @@ class Employers(Spider):
         }
     }
 
-    def start_requests(self):
-        return [
-            FormRequest(
-                "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
-                formdata={"clearCache": "F", "page": "1"},
-                cb_kwargs={"page": 1},
-                callback=self.parse,
-            )
-        ]
+    async def start(self):
+        yield FormRequest(
+            "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
+            formdata={"clearCache": "F", "page": "1"},
+            cb_kwargs={"page": 1},
+            callback=self.parse,
+        )
 
     def parse(self, response, page):
         """
@@ -81,3 +81,9 @@ class Employers(Spider):
         for employer in response.json()["detail"]:
             item = {field: employer[field] for field in employer_fields}
             yield item
+
+
+class IncrementalEmployers(SrNumSpiderMixin, Employers):
+    """Fetch additional-employer rows for a specific list of filers."""
+
+    name = "employers_incremental"
