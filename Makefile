@@ -1,55 +1,32 @@
 SHELL=/bin/bash
 
+.DELETE_ON_ERROR:
+
 define assert_not_empty
 (test -s $(1) || (echo "ERROR: $(1) is empty" && exit 1))
 endef
 
 
-lm20.db : lm20.csv lm21.csv filer.csv filing.csv employer.csv attachment.csv contact.csv receipts.csv signatures.csv specific_activity.csv performer.csv individual_disbursements.csv
-	csvs-to-sqlite $^ $@
-	sqlite-utils transform $@ filer \
-            --pk srNum \
-            --drop filerType \
-            --column-order srNum \
-            --column-order companyName \
-            --column-order companyCity \
-            --column-order companyState
-	sqlite-utils transform $@ filing \
-            --pk rptId \
-            --drop files \
-            --drop subLabOrg \
-            --drop termDate \
-            --drop amount \
-            --drop empTrdName \
-            --drop formLink
-	sqlite-utils transform $@ lm20 \
-            --rename "form._key" rptId \
-            --drop title
-	sqlite-utils transform $@ attachment \
-            --pk attachment_id \
-            --drop files \
-            --drop file_headers
+# Full from-scratch build: the schema is the checked-in schema.sql (the
+# published shape, formerly inferred by csvs-to-sqlite from CSV
+# contents), and the rows go in through the same olms merge engine the
+# incremental update uses.
+lm20.db : schema.sql filing.json form.json lm20.json lm21.json filer.csv employer.csv attachment.csv
+	rm -f $@
+	sqlite3 $@ < schema.sql
+	python scripts/merge_csv.py $@ filer --replace --ignore filerType < filer.csv
+	python scripts/load_json.py $@ filing filing.json
+	python scripts/load_json.py $@ form form.json
+	python scripts/load_json.py $@ lm20 lm20.json
+	python scripts/load_json.py $@ lm21 lm21.json
+	python scripts/merge_csv.py $@ employer < employer.csv
+	python scripts/merge_csv.py $@ attachment --ignore files --ignore file_headers < attachment.csv
 	sqlite-utils $@ "update lm20 set date_fiscal_year_ends = replace(date_fiscal_year_ends, ' / ', ' ')"
 	sqlite-utils convert $@ lm20 date_entered_into 'r.parsedate(value)'
 	sqlite-utils convert $@ lm21 period_begin 'r.parsedate(value)'
 	sqlite-utils convert $@ lm21 period_through 'r.parsedate(value)'
-	sqlite-utils transform $@ specific_activity \
-            --pk id
-	sqlite-utils $@ "update performer set specific_activity_id = (select id from specific_activity where rptId = performer.rptId and activity_order = performer.specific_activity_id)"
 	sqlite-utils vacuum $@
-	sqlite-utils add-foreign-keys $@ \
-               filing srNum filer srNum \
-               contact rptId filing rptId \
-               employer rptId filing rptId \
-               lm20 rptId filing rptId \
-               lm21 rptId filing rptId \
-               performer rptId filing rptId \
-               receipts rptId filing rptId \
-               signatures rptId filing rptId \
-               specific_activity rptId filing rptId \
-               attachment rptId filing rptId \
-               performer specific_activity_id specific_activity id \
-               individual_disbursements rptId filing rptId
+	@test -z "$$(sqlite3 $@ 'PRAGMA foreign_key_check;')" && echo "fk-check: $@ is clean"
 
 attachment.csv :
 	scrapy crawl attachments -L 'INFO' -O $@ && $(call assert_not_empty,$@)
