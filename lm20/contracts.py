@@ -1,29 +1,16 @@
-from scrapy.contracts import Contract
-from scrapy.http import FormRequest
+from olms.contracts import FormContract
 
 
-class FilersFormContract(Contract):
+class FilersFormContract(FormContract):
     name = "filers_form"
-    request_cls = FormRequest
-
-    def adjust_request_args(self, args):
-        args["formdata"] = {"clearCache": "F", "page": "1"}
-        return args
+    formdata = {"clearCache": "F", "page": "1"}
 
 
-class FilingsFormContract(Contract):
+class FilingsFormContract(FormContract):
     name = "filings_form"
-    request_cls = FormRequest
-
-    def adjust_request_args(self, args):
-        args["formdata"] = {"srNum": "C-297"}
-        return args
+    formdata = {"srNum": "C-297"}
 
 
-class EmployersFormContract(Contract):
+class EmployersFormContract(FormContract):
     name = "employers_form"
-    request_cls = FormRequest
-
-    def adjust_request_args(self, args):
-        args["formdata"] = {"rptId": "731598"}
-        return args
+    formdata = {"rptId": "731598"}

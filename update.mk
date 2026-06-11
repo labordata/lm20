@@ -22,7 +22,7 @@ PRIOR_DB_URL ?= https://github.com/labordata/lm20/releases/download/nightly/lm20
 # it by spider name); error responses are not cached so a transient
 # block doesn't poison the later spiders.
 CACHE_FLAGS := -s HTTPCACHE_ENABLED=True -s HTTPCACHE_EXPIRATION_SECS=0 \
-    -s HTTPCACHE_STORAGE=lm20.httpcache.SharedFilesystemCacheStorage \
+    -s HTTPCACHE_STORAGE=olms.cache.SharedFilesystemCacheStorage \
     -s HTTPCACHE_IGNORE_HTTP_CODES=400,403,404,429,500,502,503,504
 
 .DELETE_ON_ERROR:

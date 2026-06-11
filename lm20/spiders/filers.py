@@ -1,12 +1,13 @@
 from scrapy import Spider
-from scrapy.http import FormRequest
+
+from olms.http import form_request
 
 
 class LM20Filers(Spider):
     name = "filers"
 
     async def start(self):
-        yield FormRequest(
+        yield form_request(
             "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
             formdata={"clearCache": "F", "page": "1"},
             cb_kwargs={"page": 1},
@@ -29,7 +30,7 @@ class LM20Filers(Spider):
 
         if len(filers) == 500:
             page += 1
-            yield FormRequest(
+            yield form_request(
                 "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
                 formdata={"clearCache": "F", "page": str(page)},
                 cb_kwargs={"page": page},

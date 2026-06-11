@@ -19,7 +19,7 @@ SPIDER_CONTRACTS = {
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+from olms import USER_AGENT  # noqa: E402, F401
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -54,16 +54,10 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 4.0
 #   'Accept-Language': 'en',
 # }
 
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-# SPIDER_MIDDLEWARES = {
-#    'lm20.middlewares.Lm20SpiderMiddleware': 543,
-# }
-
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    "lm20.middlewares.BlockingBackoffMiddleware": 560,
+    "olms.middleware.BlockingBackoffMiddleware": 560,
 }
 
 # Enable or disable extensions
