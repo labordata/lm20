@@ -57,7 +57,7 @@ def fetch(session, rpt_id, form):
     """
     url = REPORT_URL.format(rpt_id, form)
     delay = 5
-    for _ in range(5):
+    for _ in range(6):
         with session.get(url, timeout=30, stream=True) as response:
             if response.status_code in BLOCK_CODES:
                 print(
