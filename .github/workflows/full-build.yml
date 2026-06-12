@@ -8,6 +8,9 @@ name: Full Database Rebuild
 concurrency:
   group: database-build
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   schedule:
     - cron: '15 10 1 * *'
