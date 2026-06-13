@@ -27,12 +27,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
-      - uses: shogo82148/actions-setup-perl@v1
 
       - name: install requirements
         run: |
           pip install -r requirements.txt
-          cpanm https://github.com/jsnell/json-to-multicsv/archive/refs/heads/master.zip
 
       - name: build database
         run: |

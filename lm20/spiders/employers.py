@@ -1,7 +1,7 @@
 from scrapy import Spider
-from scrapy.http import FormRequest
 
-from lm20.spiders.incremental import SrNumSpiderMixin
+from olms.http import form_request
+from olms.spiders import SrNumSpiderMixin
 
 
 class Employers(Spider):
@@ -9,14 +9,14 @@ class Employers(Spider):
 
     custom_settings = {
         "ITEM_PIPELINES": {
-            "lm20.pipelines.Nullify": 1,
-            "lm20.pipelines.TitleCase": 2,
-            "lm20.pipelines.StandardDate": 3,
+            "olms.pipelines.Nullify": 1,
+            "olms.pipelines.TitleCase": 2,
+            "olms.pipelines.StandardDate": 3,
         }
     }
 
     async def start(self):
-        yield FormRequest(
+        yield form_request(
             "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
             formdata={"clearCache": "F", "page": "1"},
             cb_kwargs={"page": 1},
@@ -33,19 +33,22 @@ class Employers(Spider):
 
         filers = response.json()["filerList"]
         for filer in filers:
-            yield FormRequest(
-                "https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet",
-                formdata={"srNum": "C-" + str(filer["srNum"])},
-                callback=self.parse_filings,
-            )
+            yield self._detail_request(filer["srNum"])
         if len(filers) == 500:
             page += 1
-            yield FormRequest(
+            yield form_request(
                 "https://olmsapps.dol.gov/olpdr/GetLM2021FilerListServlet",
                 formdata={"clearCache": "F", "page": str(page)},
                 cb_kwargs={"page": page},
                 callback=self.parse,
             )
+
+    def _detail_request(self, sr_num):
+        return form_request(
+            "https://olmsapps.dol.gov/olpdr/GetLM2021FilerDetailServlet",
+            formdata={"srNum": "C-" + str(sr_num)},
+            callback=self.parse_filings,
+        )
 
     def parse_filings(self, response):
         """
@@ -55,7 +58,7 @@ class Employers(Spider):
         """
 
         for filing in response.json()["detail"]:
-            yield FormRequest(
+            yield form_request(
                 "https://olmsapps.dol.gov/olpdr/GetAdditionalEmpsServlet",
                 formdata={"rptId": str(filing["rptId"])},
                 callback=self.parse_employer,

@@ -2,11 +2,12 @@
 #
 # Discover filers with new LM-20/LM-21 activity
 # (scripts/discover_new_filings.py), crawl just those filers with the
-# *_incremental spiders, run the same CSV transforms as the full build
-# (common.mk), and merge each table into the previously released
-# database with scripts/merge_csv.py. The filer table is refreshed on
-# every run. Paper filings and upstream deletions this path can't see
-# are reconciled by the scheduled full rebuild
+# *_incremental spiders, fan filing.jl out into JSON documents
+# (common.mk), and load them into the previously released database —
+# each document's tables in one transaction (scripts/load_json.py),
+# the flat spider feeds via scripts/merge_csv.py. The filer table is
+# refreshed on every run. Paper filings and upstream deletions this
+# path can't see are reconciled by the scheduled full rebuild
 # (.github/workflows/full-build.yml).
 #
 # Usage: make -f update.mk update
@@ -22,16 +23,15 @@ PRIOR_DB_URL ?= https://github.com/labordata/lm20/releases/download/nightly/lm20
 # it by spider name); error responses are not cached so a transient
 # block doesn't poison the later spiders.
 CACHE_FLAGS := -s HTTPCACHE_ENABLED=True -s HTTPCACHE_EXPIRATION_SECS=0 \
-    -s HTTPCACHE_STORAGE=lm20.httpcache.SharedFilesystemCacheStorage \
+    -s HTTPCACHE_STORAGE=olms.cache.SharedFilesystemCacheStorage \
     -s HTTPCACHE_IGNORE_HTTP_CODES=400,403,404,429,500,502,503,504
 
 .DELETE_ON_ERROR:
 
-MERGE_TARGETS := update_filing update_lm20 update_lm21 update_contact \
-    update_employer update_attachment update_receipts update_signatures \
-    update_specific_activity update_performer update_individual_disbursements
+LOAD_TARGETS := update_filing update_forms update_lm20 update_lm21
+CSV_TARGETS := update_employer update_attachment
 
-.PHONY: update polish_db fk-check update_filer $(MERGE_TARGETS)
+.PHONY: update polish_db fk-check update_filer $(LOAD_TARGETS) $(CSV_TARGETS)
 
 # ============================================================================
 # Entry
@@ -45,7 +45,7 @@ update: lm20.db
 	$(MAKE) -f update.mk -j2 sr_nums.txt filer.csv
 	$(MAKE) -f update.mk update_filer
 	@if [ -s sr_nums.txt ]; then \
-	    $(MAKE) -f update.mk $(MERGE_TARGETS) polish_db; \
+	    $(MAKE) -f update.mk $(LOAD_TARGETS) $(CSV_TARGETS) polish_db; \
 	else \
 	    echo "update: no new filings discovered; only the filer table was refreshed" >&2; \
 	fi
@@ -79,24 +79,29 @@ polish_db:
 	done
 
 # ============================================================================
-# Per-table merges
+# Loads: one transaction per source document
 # ============================================================================
 
-# Fields the full build's sqlite-utils transforms drop, mirrored here.
+update_filing: filing.json update_filer | lm20.db
+	python scripts/load_json.py lm20.db filing $<
+
+update_forms: form.json update_filing | lm20.db
+	python scripts/load_json.py lm20.db form $<
+
+update_lm20: lm20.json update_filing | lm20.db
+	python scripts/load_json.py lm20.db lm20 $<
+
+update_lm21: lm21.json update_filing | lm20.db
+	python scripts/load_json.py lm20.db lm21 $<
+
+# Fields the full build drops, mirrored here.
 MERGE_FLAGS_filer := --replace --ignore filerType
-MERGE_FLAGS_filing := --ignore subLabOrg --ignore termDate --ignore amount \
-    --ignore empTrdName --ignore formLink
-MERGE_FLAGS_lm20 := --ignore title
 MERGE_FLAGS_attachment := --ignore files --ignore file_headers
 
-$(MERGE_TARGETS) update_filer: update_%: %.csv | lm20.db
+$(CSV_TARGETS) update_filer: update_%: %.csv | lm20.db
 	python scripts/merge_csv.py lm20.db $* $(MERGE_FLAGS_$*) < $<
 
-# FK order: filing references filer; every other table references
-# filing; performer additionally resolves ids against specific_activity.
-update_filing: update_filer
-$(filter-out update_filing,$(MERGE_TARGETS)): update_filing
-update_performer: update_specific_activity
+$(CSV_TARGETS): update_filing
 
 # ============================================================================
 # Spider outputs

@@ -1,4 +1,4 @@
 scrapy
 sqlite-utils
 requests
-https://github.com/LuighiV/csvs-to-sqlite/archive/refs/heads/main.zip
+https://github.com/labordata/olms/archive/refs/heads/main.zip
