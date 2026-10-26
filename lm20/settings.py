@@ -32,9 +32,13 @@ FILES_STORE = "./reports"
 
 # OLMS 403-blocks heavy traffic, so crawl lightly: cap per-domain
 # concurrency and let AutoThrottle pace requests by observed latency.
-# BlockingBackoffMiddleware handles any 403/429 that still gets
+# BlockingBackoffMiddleware handles any 403/429/404 that still gets
 # through (exponential backoff + retry, abort when persistently
-# blocked).
+# blocked). The LM-20/21 servlets disguise blocking as a 404 rather
+# than 403/429 (a genuine not-found from them is a 200 with an empty
+# result), so 404 is included here — unlike other OLMS spiders, where
+# a 404 is a real, consistently-reproducible routing error.
+BLOCKING_BACKOFF_CODES = (403, 404, 429)
 CONCURRENT_REQUESTS_PER_DOMAIN = 4
 
 AUTOTHROTTLE_ENABLED = True
