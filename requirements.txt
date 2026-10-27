@@ -1,4 +1,4 @@
 scrapy
 sqlite-utils
 requests
-https://github.com/labordata/olms/archive/refs/heads/hcg/sticky-node-retry.zip
+https://github.com/labordata/olms/archive/refs/heads/main.zip
