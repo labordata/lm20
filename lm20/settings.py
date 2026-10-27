@@ -57,6 +57,16 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 4.0
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
+    # Higher priority number than BlockingBackoffMiddleware so it sees
+    # responses first: the olpdr detail/list servlets intermittently
+    # 404 with a WebSphere "has not been defined" body from a sticky
+    # bad backend node behind OLMS's load balancer, not a real
+    # not-found or a rate-limit block, and retrying it on a fresh
+    # connection (what this middleware does) resolves it — backing off
+    # the whole domain over it (what BlockingBackoffMiddleware would
+    # otherwise do) just stalls every other in-flight request behind
+    # one unlucky connection for no reason.
+    "olms.middleware.StickyBadNodeRetryMiddleware": 570,
     "olms.middleware.BlockingBackoffMiddleware": 560,
 }
 
