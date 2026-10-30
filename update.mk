@@ -95,7 +95,7 @@ update_lm21: lm21.json update_filing | lm20.db
 	python scripts/load_json.py lm20.db lm21 $<
 
 # Fields the full build drops, mirrored here.
-MERGE_FLAGS_filer := --replace --ignore filerType
+MERGE_FLAGS_filer := --replace --ignore filerType --ignore lm2021VisualizationYears
 MERGE_FLAGS_attachment := --ignore files --ignore file_headers
 
 $(CSV_TARGETS) update_filer: update_%: %.csv | lm20.db
